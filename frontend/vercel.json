@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "smart-5iwvyj6g5-abhisheks-projects-a7c6a856.vercel.app" }
+    { "source": "/api/:path*", "destination": "https://smart-cv-xi.vercel.app/api/:path*" }
   ]
 }
