@@ -2,22 +2,109 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const defaultForm = {
-  personalInfo: { name: "", email: "", phone: "", location: "", linkedin: "", portfolio: "" },
+  personalInfo: { name: "", email: "", phone: "", location: "", linkedin: "", github: "", leetcode: "", portfolio: "" },
   targetRole: "",
   jobDescription: "",
-  experience: [{ title: "", company: "", duration: "", description: "" }],
+  projects: [{ title: "", subtitle: "", techStack: "", github: "", live: "", description: "" }],
+  experience: [],
   education: [{ degree: "", institution: "", year: "", details: "" }],
   skills: "",
+  certifications: "",
+  achievements: "",
 };
 
-export default function ResumeForm({ onGenerated }) {
-  const [form, setForm] = useState(defaultForm);
+export default function ResumeForm({ onGenerated, initialData }) {
+  const [form, setForm] = useState(() => {
+    if (!initialData) return defaultForm;
+
+    // Convert skills object to formatted string if needed
+    let formattedSkills = initialData.skills || "";
+    if (typeof initialData.skills === "object" && initialData.skills !== null) {
+      formattedSkills = Object.entries(initialData.skills)
+        .map(([cat, list]) => `${cat}: ${Array.isArray(list) ? list.join(", ") : list}`)
+        .join("\n");
+    }
+
+    // Convert projects if array of objects from generated resume
+    let formattedProjects = initialData.projects || [];
+    if (formattedProjects.length > 0 && Array.isArray(formattedProjects[0]?.bullets)) {
+      formattedProjects = formattedProjects.map((p) => ({
+        title: p.title || "",
+        subtitle: p.subtitle || "",
+        techStack: Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack || "",
+        github: p.links?.github || p.github || "",
+        live: p.links?.live || p.live || "",
+        description: Array.isArray(p.bullets) ? p.bullets.map(b => `• ${b}`).join("\n") : p.description || ""
+      }));
+    }
+
+    // Convert experience if array of objects from generated resume
+    let formattedExp = initialData.experience || [];
+    if (formattedExp.length > 0 && Array.isArray(formattedExp[0]?.bullets)) {
+      formattedExp = formattedExp.map((e) => ({
+        title: e.title || "",
+        company: e.company || "",
+        duration: e.duration || "",
+        description: Array.isArray(e.bullets) ? e.bullets.map(b => `• ${b}`).join("\n") : e.description || ""
+      }));
+    }
+
+    // Convert certifications and achievements arrays to string
+    let formattedCerts = initialData.certifications || "";
+    if (Array.isArray(formattedCerts)) {
+      formattedCerts = formattedCerts.map(c => typeof c === "string" ? `• ${c}` : `• ${c.name}`).join("\n");
+    }
+
+    let formattedAch = initialData.achievements || "";
+    if (Array.isArray(formattedAch)) {
+      formattedAch = formattedAch.map(a => typeof a === "string" ? `• ${a}` : `• ${a.description}`).join("\n");
+    }
+
+    return {
+      personalInfo: {
+        name: initialData.personalInfo?.name || "",
+        email: initialData.personalInfo?.email || "",
+        phone: initialData.personalInfo?.phone || "",
+        location: initialData.personalInfo?.location || "",
+        linkedin: initialData.personalInfo?.linkedin || "",
+        github: initialData.personalInfo?.github || "",
+        leetcode: initialData.personalInfo?.leetcode || "",
+        portfolio: initialData.personalInfo?.portfolio || "",
+      },
+      targetRole: initialData.targetRole || "",
+      jobDescription: initialData.jobDescription || "",
+      projects: formattedProjects.length > 0 ? formattedProjects : [{ title: "", subtitle: "", techStack: "", github: "", live: "", description: "" }],
+      experience: formattedExp,
+      education: initialData.education?.length > 0 ? initialData.education : [{ degree: "", institution: "", year: "", details: "" }],
+      skills: formattedSkills,
+      certifications: formattedCerts,
+      achievements: formattedAch,
+    };
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const updatePersonal = (field, val) =>
     setForm((f) => ({ ...f, personalInfo: { ...f.personalInfo, [field]: val } }));
 
+  // Projects handlers
+  const updateProj = (i, field, val) =>
+    setForm((f) => {
+      const projects = [...f.projects];
+      projects[i] = { ...projects[i], [field]: val };
+      return { ...f, projects };
+    });
+
+  const addProj = () =>
+    setForm((f) => ({
+      ...f,
+      projects: [...f.projects, { title: "", subtitle: "", techStack: "", github: "", live: "", description: "" }]
+    }));
+
+  const removeProj = (i) =>
+    setForm((f) => ({ ...f, projects: f.projects.filter((_, idx) => idx !== i) }));
+
+  // Experience handlers
   const updateExp = (i, field, val) =>
     setForm((f) => {
       const experience = [...f.experience];
@@ -31,6 +118,7 @@ export default function ResumeForm({ onGenerated }) {
   const removeExp = (i) =>
     setForm((f) => ({ ...f, experience: f.experience.filter((_, idx) => idx !== i) }));
 
+  // Education handlers
   const updateEdu = (i, field, val) =>
     setForm((f) => {
       const education = [...f.education];
@@ -62,26 +150,28 @@ export default function ResumeForm({ onGenerated }) {
     <>
       {loading && (
         <div className="loading-overlay">
-          <div className="loading-card">
-            <div className="spinner" />
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Crafting your resume...</div>
-            <div style={{ fontSize: 14, color: "#64748b" }}>Gemini AI is writing your perfect resume</div>
+          <div className="loading-card-3d">
+            <div className="spinner-3d" />
+            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: "#fff", fontFamily: "'Outfit', sans-serif" }}>
+              Crafting your resume...
+            </div>
+            <div style={{ fontSize: 14, color: "#94a3b8" }}>AI is formatting your ATS-optimized resume</div>
           </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ display: "grid", gap: 20 }}>
+      <form onSubmit={handleSubmit} style={{ maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ display: "grid", gap: 28 }}>
 
           {/* Target Role */}
-          <div className="card">
-            <div className="section-title">🎯 Target Role</div>
+          <div className="glass-card-3d">
+            <div className="form-section-title">🎯 Target Role</div>
             {error && <div className="error-msg">⚠️ {error}</div>}
             <div className="form-row">
               <div className="form-group">
                 <label>Job Title You're Applying For *</label>
                 <input
-                  placeholder="e.g. Senior Frontend Developer"
+                  placeholder="e.g. Full Stack Developer / Software Engineer"
                   value={form.targetRole}
                   onChange={(e) => setForm((f) => ({ ...f, targetRole: e.target.value }))}
                   required
@@ -94,178 +184,276 @@ export default function ResumeForm({ onGenerated }) {
                 placeholder="Paste the job description here to tailor your resume..."
                 value={form.jobDescription}
                 onChange={(e) => setForm((f) => ({ ...f, jobDescription: e.target.value }))}
-                style={{ minHeight: 100 }}
+                style={{ minHeight: 90 }}
               />
             </div>
           </div>
 
           {/* Personal Info */}
-          <div className="card">
-            <div className="section-title">👤 Personal Information</div>
+          <div className="glass-card-3d">
+            <div className="form-section-title">👤 Personal Information</div>
             <div className="form-row">
               <div className="form-group">
                 <label>Full Name *</label>
-                <input placeholder="John Doe" value={form.personalInfo.name}
+                <input placeholder="e.g. Jane Doe" value={form.personalInfo.name}
                   onChange={(e) => updatePersonal("name", e.target.value)} required />
               </div>
               <div className="form-group">
                 <label>Email *</label>
-                <input type="email" placeholder="john@example.com" value={form.personalInfo.email}
+                <input type="email" placeholder="e.g. jane@example.com" value={form.personalInfo.email}
                   onChange={(e) => updatePersonal("email", e.target.value)} required />
               </div>
             </div>
             <div className="form-row">
               <div className="form-group">
                 <label>Phone</label>
-                <input placeholder="+91 98765 43210" value={form.personalInfo.phone}
+                <input placeholder="e.g. +1 (555) 000-0000" value={form.personalInfo.phone}
                   onChange={(e) => updatePersonal("phone", e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Location</label>
-                <input placeholder="Mumbai, India" value={form.personalInfo.location}
+                <input placeholder="e.g. San Francisco, CA" value={form.personalInfo.location}
                   onChange={(e) => updatePersonal("location", e.target.value)} />
               </div>
             </div>
             <div className="form-row">
               <div className="form-group">
                 <label>LinkedIn URL</label>
-                <input placeholder="linkedin.com/in/johndoe" value={form.personalInfo.linkedin}
+                <input placeholder="e.g. linkedin.com/in/janedoe" value={form.personalInfo.linkedin}
                   onChange={(e) => updatePersonal("linkedin", e.target.value)} />
               </div>
               <div className="form-group">
+                <label>GitHub Profile</label>
+                <input placeholder="e.g. github.com/janedoe" value={form.personalInfo.github}
+                  onChange={(e) => updatePersonal("github", e.target.value)} />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>LeetCode Profile</label>
+                <input placeholder="e.g. leetcode.com/janedoe" value={form.personalInfo.leetcode}
+                  onChange={(e) => updatePersonal("leetcode", e.target.value)} />
+              </div>
+              <div className="form-group">
                 <label>Portfolio / Website</label>
-                <input placeholder="johndoe.dev" value={form.personalInfo.portfolio}
+                <input placeholder="e.g. janedoe.dev" value={form.personalInfo.portfolio}
                   onChange={(e) => updatePersonal("portfolio", e.target.value)} />
               </div>
             </div>
           </div>
 
-          {/* Experience */}
-          <div className="card">
-            <div className="section-title">
-              💼 Work Experience
-              <span className="badge">{form.experience.length}</span>
-            </div>
-            {form.experience.map((exp, i) => (
-              <div key={i} style={{
-                padding: 16, background: "#f8fafc", borderRadius: 10,
-                border: "1px solid #e5e7eb", marginBottom: 16
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-                  <span style={{ fontWeight: 600, fontSize: 13, color: "#6366f1" }}>
-                    Experience {i + 1}
-                  </span>
-                  {form.experience.length > 1 && (
-                    <button type="button" className="btn btn-danger" style={{ padding: "4px 10px", fontSize: 12 }}
-                      onClick={() => removeExp(i)}>Remove</button>
-                  )}
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Job Title *</label>
-                    <input placeholder="Software Engineer" value={exp.title}
-                      onChange={(e) => updateExp(i, "title", e.target.value)} required />
-                  </div>
-                  <div className="form-group">
-                    <label>Company *</label>
-                    <input placeholder="Google" value={exp.company}
-                      onChange={(e) => updateExp(i, "company", e.target.value)} required />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Duration</label>
-                  <input placeholder="Jan 2022 – Present" value={exp.duration}
-                    onChange={(e) => updateExp(i, "duration", e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Description</label>
-                  <textarea
-                    placeholder="Briefly describe your responsibilities and achievements..."
-                    value={exp.description}
-                    onChange={(e) => updateExp(i, "description", e.target.value)}
-                  />
-                </div>
-              </div>
-            ))}
-            <button type="button" className="btn btn-secondary" onClick={addExp}>
-              + Add Experience
-            </button>
-          </div>
-
           {/* Education */}
-          <div className="card">
-            <div className="section-title">
-              🎓 Education
-              <span className="badge">{form.education.length}</span>
+          <div className="glass-card-3d">
+            <div className="form-section-title">
+              🎓 Education *
+              <span style={{ fontSize: 12, background: "rgba(168,85,247,0.2)", color: "#c084fc", padding: "2px 10px", borderRadius: 99 }}>{form.education.length}</span>
             </div>
             {form.education.map((edu, i) => (
               <div key={i} style={{
-                padding: 16, background: "#f8fafc", borderRadius: 10,
-                border: "1px solid #e5e7eb", marginBottom: 16
+                padding: 20, background: "#f8fafc", borderRadius: 16,
+                border: "1px solid #e2e8f0", marginBottom: 18
               }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-                  <span style={{ fontWeight: 600, fontSize: 13, color: "#6366f1" }}>Education {i + 1}</span>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  <span style={{ fontWeight: 700, fontSize: 14, color: "#a855f7" }}>Education {i + 1}</span>
                   {form.education.length > 1 && (
-                    <button type="button" className="btn btn-danger" style={{ padding: "4px 10px", fontSize: 12 }}
+                    <button type="button" className="btn-3d-secondary" style={{ padding: "4px 12px", fontSize: 12, background: "rgba(239,68,68,0.2)", borderColor: "rgba(239,68,68,0.4)", color: "#fca5a5" }}
                       onClick={() => removeEdu(i)}>Remove</button>
                   )}
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Degree / Qualification *</label>
-                    <input placeholder="B.Tech Computer Science" value={edu.degree}
-                      onChange={(e) => updateEdu(i, "degree", e.target.value)} required />
+                    <label>Institution / University *</label>
+                    <input placeholder="e.g. State University" value={edu.institution}
+                      onChange={(e) => updateEdu(i, "institution", e.target.value)} required />
                   </div>
                   <div className="form-group">
-                    <label>Institution *</label>
-                    <input placeholder="IIT Bombay" value={edu.institution}
-                      onChange={(e) => updateEdu(i, "institution", e.target.value)} required />
+                    <label>Degree / Qualification *</label>
+                    <input placeholder="e.g. B.S. in Computer Science" value={edu.degree}
+                      onChange={(e) => updateEdu(i, "degree", e.target.value)} required />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Year</label>
-                    <input placeholder="2020 – 2024" value={edu.year}
+                    <label>Duration / Year</label>
+                    <input placeholder="e.g. 2021 – 2025" value={edu.year}
                       onChange={(e) => updateEdu(i, "year", e.target.value)} />
                   </div>
                   <div className="form-group">
-                    <label>Details (GPA, honors, etc.)</label>
-                    <input placeholder="GPA: 8.9/10, Dean's List" value={edu.details}
+                    <label>Details (CGPA, GPA, etc.)</label>
+                    <input placeholder="e.g. GPA: 3.8 / 4.0" value={edu.details}
                       onChange={(e) => updateEdu(i, "details", e.target.value)} />
                   </div>
                 </div>
               </div>
             ))}
-            <button type="button" className="btn btn-secondary" onClick={addEdu}>
+            <button type="button" className="btn-3d-secondary" onClick={addEdu}>
               + Add Education
             </button>
           </div>
 
           {/* Skills */}
-          <div className="card">
-            <div className="section-title">🛠️ Skills</div>
+          <div className="glass-card-3d">
+            <div className="form-section-title">🛠️ Technical Skills *</div>
             <div className="form-group">
               <label>List Your Skills *</label>
               <textarea
-                placeholder="React, Node.js, Python, SQL, Docker, AWS, Git, Figma, Communication, Leadership..."
+                placeholder="Languages: C/C++, JavaScript, Python&#10;Frontend: HTML, CSS, React.js&#10;Backend: Node.js, Express.js&#10;Database: MySQL, MongoDB&#10;Tools: Git, GitHub, VS Code&#10;Core CS: Data Structures & Algorithms, OOP, DBMS, Computer Networks, Operating Systems"
                 value={form.skills}
                 onChange={(e) => setForm((f) => ({ ...f, skills: e.target.value }))}
-                style={{ minHeight: 80 }}
+                style={{ minHeight: 120 }}
                 required
               />
-              <div style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
-                Separate skills with commas. Gemini will automatically categorize them.
+              <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 8 }}>
+                💡 You can group by category or separate with commas. AI will format into clean categories.
               </div>
             </div>
           </div>
 
-          {/* Submit */}
-          <div style={{ textAlign: "center", paddingBottom: 32 }}>
-            <button type="submit" className="btn btn-primary" disabled={loading}
-              style={{ padding: "14px 40px", fontSize: 16, borderRadius: 12 }}>
-              {loading ? "Generating..." : "✨ Generate AI Resume"}
+          {/* Projects */}
+          <div className="glass-card-3d">
+            <div className="form-section-title">
+              🚀 Projects
+              <span style={{ fontSize: 12, background: "rgba(168,85,247,0.2)", color: "#c084fc", padding: "2px 10px", borderRadius: 99 }}>{form.projects.length}</span>
+            </div>
+            {form.projects.map((proj, i) => (
+              <div key={i} style={{
+                padding: 20, background: "#f8fafc", borderRadius: 16,
+                border: "1px solid #e2e8f0", marginBottom: 18
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  <span style={{ fontWeight: 700, fontSize: 14, color: "#a855f7" }}>
+                    Project {i + 1}
+                  </span>
+                  {form.projects.length > 0 && (
+                    <button type="button" className="btn-3d-secondary" style={{ padding: "4px 12px", fontSize: 12, background: "rgba(239,68,68,0.2)", borderColor: "rgba(239,68,68,0.4)", color: "#fca5a5" }}
+                      onClick={() => removeProj(i)}>Remove</button>
+                  )}
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Project Title</label>
+                    <input placeholder="e.g. E-Commerce Platform" value={proj.title}
+                      onChange={(e) => updateProj(i, "title", e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>Subtitle / One-liner</label>
+                    <input placeholder="e.g. Full-Stack Web Application" value={proj.subtitle}
+                      onChange={(e) => updateProj(i, "subtitle", e.target.value)} />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Tech Stack</label>
+                    <input placeholder="e.g. React, Node.js, Express, MongoDB" value={proj.techStack}
+                      onChange={(e) => updateProj(i, "techStack", e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>GitHub Link (optional)</label>
+                    <input placeholder="e.g. https://github.com/user/repo" value={proj.github}
+                      onChange={(e) => updateProj(i, "github", e.target.value)} />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Project Description / Key Highlights</label>
+                  <textarea
+                    placeholder="• Built a full-stack e-commerce web application with user authentication...&#10;• Integrated payment gateway and automated email notifications..."
+                    value={proj.description}
+                    onChange={(e) => updateProj(i, "description", e.target.value)}
+                    style={{ minHeight: 90 }}
+                  />
+                </div>
+              </div>
+            ))}
+            <button type="button" className="btn-3d-secondary" onClick={addProj}>
+              + Add Project
             </button>
-            
+          </div>
+
+          {/* Work Experience (Optional) */}
+          <div className="glass-card-3d">
+            <div className="form-section-title">
+              💼 Work Experience (Optional)
+              <span style={{ fontSize: 12, background: "rgba(168,85,247,0.2)", color: "#c084fc", padding: "2px 10px", borderRadius: 99 }}>{form.experience.length}</span>
+            </div>
+            {form.experience.map((exp, i) => (
+              <div key={i} style={{
+                padding: 20, background: "#f8fafc", borderRadius: 16,
+                border: "1px solid #e2e8f0", marginBottom: 18
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  <span style={{ fontWeight: 700, fontSize: 14, color: "#a855f7" }}>
+                    Experience {i + 1}
+                  </span>
+                  <button type="button" className="btn-3d-secondary" style={{ padding: "4px 12px", fontSize: 12, background: "rgba(239,68,68,0.2)", borderColor: "rgba(239,68,68,0.4)", color: "#fca5a5" }}
+                    onClick={() => removeExp(i)}>Remove</button>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Job Title</label>
+                    <input placeholder="e.g. Software Engineering Intern" value={exp.title}
+                      onChange={(e) => updateExp(i, "title", e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>Company</label>
+                    <input placeholder="e.g. Tech Corp" value={exp.company}
+                      onChange={(e) => updateExp(i, "company", e.target.value)} />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Duration</label>
+                  <input placeholder="e.g. Jun 2024 – Aug 2024" value={exp.duration}
+                    onChange={(e) => updateExp(i, "duration", e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    placeholder="Briefly describe your responsibilities..."
+                    value={exp.description}
+                    onChange={(e) => updateExp(i, "description", e.target.value)}
+                    style={{ minHeight: 80 }}
+                  />
+                </div>
+              </div>
+            ))}
+            <button type="button" className="btn-3d-secondary" onClick={addExp}>
+              + Add Work Experience
+            </button>
+          </div>
+
+          {/* Certifications (Optional) */}
+          <div className="glass-card-3d">
+            <div className="form-section-title">📜 Certifications (Optional)</div>
+            <div className="form-group">
+              <label>List Your Certifications</label>
+              <textarea
+                placeholder="• AWS Certified Developer — Amazon Web Services&#10;• Certified Kubernetes Administrator (CKA) — Linux Foundation"
+                value={form.certifications}
+                onChange={(e) => setForm((f) => ({ ...f, certifications: e.target.value }))}
+                style={{ minHeight: 90 }}
+              />
+            </div>
+          </div>
+
+          {/* Achievements (Optional) */}
+          <div className="glass-card-3d">
+            <div className="form-section-title">🏆 Achievements (Optional)</div>
+            <div className="form-group">
+              <label>List Your Achievements</label>
+              <textarea
+                placeholder="• Solved 200+ coding problems on LeetCode&#10;• Placed top 5% in Global Hackathon 2024"
+                value={form.achievements}
+                onChange={(e) => setForm((f) => ({ ...f, achievements: e.target.value }))}
+                style={{ minHeight: 80 }}
+              />
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div style={{ textAlign: "center", padding: "16px 0 40px" }}>
+            <button type="submit" className="btn-3d-primary" disabled={loading}
+              style={{ width: "100%", maxWidth: 420, padding: "16px 0", fontSize: 18 }}>
+              {loading ? "Generating Resume..." : "✨ Generate AI Resume"}
+            </button>
           </div>
         </div>
       </form>

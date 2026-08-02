@@ -8,7 +8,6 @@ const validateResume = [
   body("personalInfo.name").notEmpty().withMessage("Name is required"),
   body("personalInfo.email").isEmail().withMessage("Valid email is required"),
   body("targetRole").notEmpty().withMessage("Target role is required"),
-  body("experience").isArray({ min: 1 }).withMessage("At least one experience entry required"),
   body("education").isArray({ min: 1 }).withMessage("At least one education entry required"),
   body("skills").notEmpty().withMessage("Skills are required"),
 ];

@@ -1,22 +1,30 @@
 import React from "react";
 
-export default function Header() {
+export default function Header({ onNavigate, currentStep }) {
   return (
-    <header style={{
-      background: "white", borderBottom: "1px solid #e5e7eb",
-      padding: "16px 24px", display: "flex", alignItems: "center",
-      gap: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
-    }}>
-      <div style={{
-        width: 36, height: 36, background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-        borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 18
-      }}>📄</div>
-      <div>
-        <div style={{ fontWeight: 700, fontSize: 18, color: "#1e293b" }}>SmartCV</div>
-        
+    <header className="app-header">
+      <div className="logo-brand" onClick={() => onNavigate("landing")}>
+        <div className="logo-icon">✨</div>
+        <span style={{ background: "linear-gradient(135deg, #fff 30%, #a855f7 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          SmartCV AI
+        </span>
       </div>
-      
+
+      <nav className="nav-links">
+        <button
+          className={`btn-3d-secondary ${currentStep === "landing" ? "active" : ""}`}
+          onClick={() => onNavigate("landing")}
+          style={{ border: "none" }}
+        >
+          Home
+        </button>
+        <button
+          className="nav-btn-glow"
+          onClick={() => onNavigate("form")}
+        >
+          {currentStep === "preview" ? "Edit Resume" : "Create Resume ✨"}
+        </button>
+      </nav>
     </header>
   );
 }
