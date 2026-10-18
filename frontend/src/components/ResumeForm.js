@@ -13,7 +13,7 @@ const defaultForm = {
   achievements: "",
 };
 
-export default function ResumeForm({ onGenerated, initialData }) {
+export default function ResumeForm({ onGenerated, initialData, selectedTemplate, onChangeTemplate }) {
   const [form, setForm] = useState(() => {
     if (!initialData) return defaultForm;
 
@@ -160,6 +160,40 @@ export default function ResumeForm({ onGenerated, initialData }) {
         </div>
       )}
 
+      {/* Template Status Bar */}
+      <div style={{ maxWidth: 900, margin: "0 auto 20px" }}>
+        <div style={{
+          background: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          borderRadius: 14,
+          padding: "12px 20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 10
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 13, color: "#94a3b8" }}>Step 2 of 3: Details & Content</span>
+            <span style={{ color: "rgba(255,255,255,0.2)" }}>|</span>
+            <span style={{ fontSize: 13, color: "#cbd5e1" }}>
+              Template: <strong style={{ color: "#a855f7" }}>{selectedTemplate === "simple_2" ? "Clean Centered Serif" : "Classic Timeline"}</strong>
+            </span>
+          </div>
+
+          {onChangeTemplate && (
+            <button
+              type="button"
+              onClick={onChangeTemplate}
+              className="btn-3d-secondary"
+              style={{ padding: "6px 14px", fontSize: 12, border: "none" }}
+            >
+              🎨 Change Template
+            </button>
+          )}
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} style={{ maxWidth: 900, margin: "0 auto" }}>
         <div style={{ display: "grid", gap: 28 }}>
 
@@ -268,7 +302,7 @@ export default function ResumeForm({ onGenerated, initialData }) {
                   </div>
                   <div className="form-group">
                     <label>Degree / Qualification *</label>
-                    <input placeholder="e.g. B.S. in Computer Science" value={edu.degree}
+                    <input placeholder="e.g. B.Tech in Computer Science" value={edu.degree}
                       onChange={(e) => updateEdu(i, "degree", e.target.value)} required />
                   </div>
                 </div>
@@ -297,7 +331,7 @@ export default function ResumeForm({ onGenerated, initialData }) {
             <div className="form-group">
               <label>List Your Skills *</label>
               <textarea
-                placeholder="Languages: C/C++, JavaScript, Python&#10;Frontend: HTML, CSS, React.js&#10;Backend: Node.js, Express.js&#10;Database: MySQL, MongoDB&#10;Tools: Git, GitHub, VS Code&#10;Core CS: Data Structures & Algorithms, OOP, DBMS, Computer Networks, Operating Systems"
+                placeholder=""
                 value={form.skills}
                 onChange={(e) => setForm((f) => ({ ...f, skills: e.target.value }))}
                 style={{ minHeight: 120 }}
@@ -356,7 +390,7 @@ export default function ResumeForm({ onGenerated, initialData }) {
                 <div className="form-group">
                   <label>Project Description / Key Highlights</label>
                   <textarea
-                    placeholder="• Built a full-stack e-commerce web application with user authentication...&#10;• Integrated payment gateway and automated email notifications..."
+                    placeholder="• Built a full-stack e-commerce web application with user authentication..."
                     value={proj.description}
                     onChange={(e) => updateProj(i, "description", e.target.value)}
                     style={{ minHeight: 90 }}
@@ -426,7 +460,7 @@ export default function ResumeForm({ onGenerated, initialData }) {
             <div className="form-group">
               <label>List Your Certifications</label>
               <textarea
-                placeholder="• AWS Certified Developer — Amazon Web Services&#10;• Certified Kubernetes Administrator (CKA) — Linux Foundation"
+                placeholder="• AWS Certified Developer — Amazon Web Services"
                 value={form.certifications}
                 onChange={(e) => setForm((f) => ({ ...f, certifications: e.target.value }))}
                 style={{ minHeight: 90 }}
@@ -440,7 +474,7 @@ export default function ResumeForm({ onGenerated, initialData }) {
             <div className="form-group">
               <label>List Your Achievements</label>
               <textarea
-                placeholder="• Solved 200+ coding problems on LeetCode&#10;• Placed top 5% in Global Hackathon 2024"
+                placeholder="• Placed top 5% in Global Hackathon"
                 value={form.achievements}
                 onChange={(e) => setForm((f) => ({ ...f, achievements: e.target.value }))}
                 style={{ minHeight: 80 }}
