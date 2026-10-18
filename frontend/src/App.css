@@ -135,6 +135,47 @@ body {
   padding: 32px 20px;
 }
 
+/* Landing & Templates pages: full-bleed, clean white aesthetic */
+.app-landing,
+.app-step-templates {
+  background: white !important;
+}
+.app-landing::before,
+.app-landing::after,
+.app-step-templates::before,
+.app-step-templates::after {
+  display: none !important;
+}
+.app-landing .app-header,
+.app-step-templates .app-header {
+  background: rgba(255,255,255,0.95) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+.app-landing .logo-brand,
+.app-step-templates .logo-brand {
+  color: #0f172a !important;
+}
+.app-landing .logo-brand span,
+.app-step-templates .logo-brand span {
+  background: linear-gradient(135deg, #4f46e5, #f97316) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+.app-landing .nav-btn-glow {
+  background: linear-gradient(135deg, #f97316, #ef4444) !important;
+  box-shadow: 0 4px 16px rgba(249,115,22,0.35) !important;
+}
+.app-step-templates .nav-btn-glow {
+  background: linear-gradient(135deg, #16a34a, #15803d) !important;
+  box-shadow: 0 4px 16px rgba(22,163,74,0.35) !important;
+}
+.app-landing .main-content,
+.app-step-templates .main-content {
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 /* 3D Glass Cards */
 .glass-card-3d {
   background: var(--glass-bg);

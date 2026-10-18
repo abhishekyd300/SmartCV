@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LandingPage from "./components/LandingPage";
+import TemplateSelector from "./components/TemplateSelector";
 import ResumeForm from "./components/ResumeForm";
 import ResumePreview from "./components/ResumePreview";
 import Header from "./components/Header";
@@ -7,10 +8,11 @@ import "./App.css";
 
 function App() {
   const [resume, setResume] = useState(null);
-  const [step, setStep] = useState("landing"); // landing | form | preview
+  const [selectedTemplate, setSelectedTemplate] = useState("simple_1");
+  const [step, setStep] = useState("landing"); // landing | templates | form | preview
 
   return (
-    <div className={`app app-step-${step}`}>
+    <div className={`app app-step-${step}${step === "landing" ? " app-landing" : ""}`}>
       <Header
         currentStep={step}
         onNavigate={(newStep) => setStep(newStep)}
@@ -18,12 +20,25 @@ function App() {
 
       <main className="main-content">
         {step === "landing" && (
-          <LandingPage onStart={() => setStep("form")} />
+          <LandingPage onStart={() => setStep("templates")} />
+        )}
+
+        {step === "templates" && (
+          <TemplateSelector
+            initialSelected={selectedTemplate}
+            onSelect={(tplId) => {
+              setSelectedTemplate(tplId);
+              setStep("form");
+            }}
+            onSkip={() => setStep("form")}
+          />
         )}
 
         {step === "form" && (
           <ResumeForm
             initialData={resume}
+            selectedTemplate={selectedTemplate}
+            onChangeTemplate={() => setStep("templates")}
             onGenerated={(data) => {
               setResume(data);
               setStep("preview");
@@ -34,7 +49,9 @@ function App() {
         {step === "preview" && (
           <ResumePreview
             resume={resume}
+            selectedTemplate={selectedTemplate}
             onBack={() => setStep("form")}
+            onChangeTemplate={() => setStep("templates")}
           />
         )}
       </main>

@@ -19,10 +19,21 @@ export default function Header({ onNavigate, currentStep }) {
           Home
         </button>
         <button
-          className="nav-btn-glow"
-          onClick={() => onNavigate("form")}
+          className={`btn-3d-secondary ${currentStep === "templates" ? "active" : ""}`}
+          onClick={() => onNavigate("templates")}
+          style={{ border: "none" }}
         >
-          {currentStep === "preview" ? "Edit Resume" : "Create Resume ✨"}
+          Templates
+        </button>
+        <button
+          className="nav-btn-glow"
+          onClick={() => {
+            if (currentStep === "preview") onNavigate("form");
+            else if (currentStep === "landing") onNavigate("templates");
+            else onNavigate("form");
+          }}
+        >
+          {currentStep === "preview" ? "Edit Resume" : currentStep === "templates" ? "Continue →" : "Build Resume ✨"}
         </button>
       </nav>
     </header>
