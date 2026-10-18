@@ -16,6 +16,7 @@ export default function SimpleTemplate1({ resume }) {
     summary = "",
     education = [],
     skills = {},
+    languages = [],
     projects = [],
     experience = [],
     certifications = [],

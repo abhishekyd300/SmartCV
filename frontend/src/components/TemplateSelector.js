@@ -157,6 +157,230 @@ function Simple2Preview() {
   );
 }
 
+/* ─── Preview 3: Olivia Wilson Style (Modern Editorial Blush) ── */
+function Modern1Preview() {
+  return (
+    <div style={{ padding: "12px 14px", background: "#fffafb", height: "100%", boxSizing: "border-box", fontFamily: "Georgia, serif" }}>
+      {/* Top Header Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", border: "1px solid #71717a", marginBottom: 8, background: "#fff" }}>
+        <div style={{ padding: "10px 8px", textAlign: "center", borderRight: "1px solid #71717a", background: "radial-gradient(circle, #fce7f3 0%, #fff 75%)" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#0f172a" }}>Olivia Wilson</div>
+          <div style={{ fontSize: 6, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#475569", marginTop: 2 }}>WEB DESIGNER</div>
+        </div>
+        <div style={{ fontSize: 5.5, color: "#333", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <div style={{ padding: "3px 6px", borderBottom: "1px solid #71717a" }}><strong>Phone:</strong> +1 234-567</div>
+          <div style={{ padding: "3px 6px", borderBottom: "1px solid #71717a" }}><strong>Email:</strong> hello@site.com</div>
+          <div style={{ padding: "3px 6px" }}><strong>Address:</strong> NYC, 123</div>
+        </div>
+      </div>
+
+      {/* Two Column Layout */}
+      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", border: "1px solid #71717a", background: "#fff" }}>
+        {/* Left Column */}
+        <div style={{ borderRight: "1px solid #71717a" }}>
+          <div style={{ background: "#fff1f3", padding: "4px 8px", borderBottom: "1px solid #71717a", display: "flex", justifyContent: "space-between", fontSize: 6.5, fontWeight: 700 }}>
+            <span>Experience</span>
+            <span style={{ color: "#f43f5e" }}>✦</span>
+          </div>
+          <div style={{ padding: "6px 8px" }}>
+            <div style={{ fontSize: 5.5, fontWeight: 800, textTransform: "uppercase", color: "#0f172a" }}>2020 - CURRENT</div>
+            <div style={{ fontSize: 6.5, textTransform: "uppercase", color: "#333" }}>WEB DESIGNER</div>
+            <div style={{ fontSize: 5.5, color: "#e11d48", paddingLeft: 4 }}>• Responsive design</div>
+            <div style={{ fontSize: 5.5, color: "#e11d48", paddingLeft: 4 }}>• UX prototyping</div>
+
+            <div style={{ fontSize: 5.5, fontWeight: 800, textTransform: "uppercase", color: "#0f172a", marginTop: 4 }}>2017 - 2019</div>
+            <div style={{ fontSize: 6.5, textTransform: "uppercase", color: "#333" }}>JR. DESIGNER</div>
+          </div>
+
+          <div style={{ background: "#fff1f3", padding: "4px 8px", borderTop: "1px solid #71717a", borderBottom: "1px solid #71717a", display: "flex", justifyContent: "space-between", fontSize: 6.5, fontWeight: 700 }}>
+            <span>Education</span>
+            <span style={{ color: "#f43f5e" }}>✦</span>
+          </div>
+          <div style={{ padding: "6px 8px" }}>
+            <div style={{ fontSize: 5.5, fontWeight: 800 }}>2012 - 2016</div>
+            <div style={{ fontSize: 6 }}>B.S. Design & Web</div>
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div>
+          <div style={{ background: "#fff1f3", padding: "4px 8px", borderBottom: "1px solid #71717a", display: "flex", justifyContent: "space-between", fontSize: 6.5, fontWeight: 700 }}>
+            <span>Summary</span>
+            <span style={{ color: "#f43f5e" }}>✦</span>
+          </div>
+          <div style={{ padding: "6px 8px" }}>
+            <PLine w="100%" h={3} color="#94a3b8" mb={1.5} />
+            <PLine w="90%" h={3} color="#94a3b8" mb={1.5} />
+            <PLine w="75%" h={3} color="#94a3b8" mb={0} />
+          </div>
+
+          <div style={{ background: "#fff1f3", padding: "4px 8px", borderTop: "1px solid #71717a", borderBottom: "1px solid #71717a", display: "flex", justifyContent: "space-between", fontSize: 6.5, fontWeight: 700 }}>
+            <span>Skills</span>
+            <span style={{ color: "#f43f5e" }}>✦</span>
+          </div>
+          <div style={{ padding: "6px 8px", fontSize: 5.5, display: "grid", gap: 2, color: "#333" }}>
+            <div>Web Design</div>
+            <div>Front-End Dev</div>
+            <div>UX/UI Design</div>
+            <div>Responsive Design</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Preview 4: Samantha Williams (Steel Blue Header) ────── */
+function Modern2Preview() {
+  return (
+    <div style={{ background: "#ffffff", height: "100%", boxSizing: "border-box", fontFamily: "sans-serif", border: "1px solid #cbd5e1" }}>
+      {/* Top Banner (Steel Blue) */}
+      <div style={{ background: "#94b4c7", display: "grid", gridTemplateColumns: "35% 65%", borderBottom: "1px solid #7c9eb2", padding: "10px 12px", gap: 10 }}>
+        {/* Left header */}
+        <div style={{ borderRight: "1px solid rgba(0,0,0,0.15)", paddingRight: 8 }}>
+          <div style={{ fontSize: 9.5, fontWeight: 800, color: "#1e293b", lineHeight: 1.1 }}>Samantha Williams</div>
+          <div style={{ fontSize: 6, fontWeight: 600, color: "#334155", margin: "2px 0 5px" }}>Senior Sales Associate</div>
+          <div style={{ fontSize: 5.5, color: "#1e293b", display: "grid", gap: 1.5 }}>
+            <div>✉ samantha@site.com</div>
+            <div>📱 (555) 789-1234</div>
+            <div>📍 New York, NY</div>
+          </div>
+        </div>
+        {/* Right header */}
+        <div style={{ paddingLeft: 4 }}>
+          <div style={{ fontSize: 6.5, fontWeight: 800, textTransform: "uppercase", borderBottom: "1px solid #1e293b", display: "inline-block", paddingBottom: 1, marginBottom: 3 }}>
+            SUMMARY
+          </div>
+          <PLine w="100%" h={2.5} color="#1e293b" mb={1} />
+          <PLine w="95%" h={2.5} color="#1e293b" mb={1} />
+          <PLine w="85%" h={2.5} color="#1e293b" mb={0} />
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ display: "grid", gridTemplateColumns: "35% 65%", padding: "10px 12px", gap: 10 }}>
+        {/* Left Body */}
+        <div style={{ borderRight: "1px solid #e2e8f0", paddingRight: 8 }}>
+          <div style={{ fontSize: 6.5, fontWeight: 800, borderBottom: "1px solid #1e293b", display: "inline-block", paddingBottom: 1, marginBottom: 4 }}>
+            EDUCATION
+          </div>
+          <div style={{ fontSize: 6, fontWeight: 700, color: "#0f172a" }}>New York Univ.</div>
+          <div style={{ fontSize: 5.5, color: "#64748b", marginBottom: 6 }}>2013 - 2017</div>
+
+          <div style={{ fontSize: 6.5, fontWeight: 800, borderBottom: "1px solid #1e293b", display: "inline-block", paddingBottom: 1, marginBottom: 4 }}>
+            SKILLS
+          </div>
+          <div style={{ fontSize: 5.5, color: "#333", display: "grid", gap: 2 }}>
+            <div>Project Management</div>
+            <div>Data Analysis</div>
+            <div>SQL & Excel</div>
+            <div>Financial Analysis</div>
+          </div>
+        </div>
+
+        {/* Right Body */}
+        <div style={{ paddingLeft: 4 }}>
+          <div style={{ fontSize: 6.5, fontWeight: 800, borderBottom: "1px solid #1e293b", display: "inline-block", paddingBottom: 1, marginBottom: 5 }}>
+            EXPERIENCE
+          </div>
+          <div style={{ marginBottom: 5 }}>
+            <div style={{ fontSize: 6.5, fontWeight: 800, color: "#0f172a" }}>Senior Analyst - Loom & Lantern</div>
+            <div style={{ fontSize: 5.5, color: "#64748b", fontStyle: "italic", marginBottom: 2 }}>Jun 2021 - Current</div>
+            <PLine w="100%" h={2.5} color="#64748b" mb={1} />
+            <PLine w="85%" h={2.5} color="#64748b" mb={0} />
+          </div>
+          <div>
+            <div style={{ fontSize: 6.5, fontWeight: 800, color: "#0f172a" }}>Business Analyst - Willow Ltd.</div>
+            <div style={{ fontSize: 5.5, color: "#64748b", fontStyle: "italic", marginBottom: 2 }}>Jul 2017 - Apr 2021</div>
+            <PLine w="95%" h={2.5} color="#64748b" mb={0} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Preview 5: Daniel Gallego (Europass Indigo) ─────────── */
+function Modern3Preview() {
+  return (
+    <div style={{ background: "#ffffff", height: "100%", boxSizing: "border-box", fontFamily: "sans-serif", border: "1px solid #e2e8f0" }}>
+      {/* Top Banner (Europass Indigo) */}
+      <div style={{ background: "#505f9e", color: "#fff", padding: "10px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.5 }}>DANIEL GALLEGO</div>
+          <div style={{ fontSize: 6, color: "#e0e7ff" }}>Senior Project Manager</div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 8 }}>
+          <span>🇪🇺</span>
+          <span style={{ fontSize: 8, fontWeight: 700 }}>europass</span>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ display: "grid", gridTemplateColumns: "44% 56%", padding: "10px 12px", gap: 10 }}>
+        {/* Left Column */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 3 }}>
+            <span style={{ color: "#505f9e", fontSize: 6 }}>◆</span>
+            <span style={{ fontSize: 6.5, fontWeight: 800 }}>ABOUT ME</span>
+            <div style={{ flex: 1, height: 1, background: "#cbd5e1" }} />
+          </div>
+          <PLine w="100%" h={2.5} color="#94a3b8" mb={1} />
+          <PLine w="85%" h={2.5} color="#94a3b8" mb={5} />
+
+          <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 3 }}>
+            <span style={{ color: "#505f9e", fontSize: 6 }}>◆</span>
+            <span style={{ fontSize: 6.5, fontWeight: 800 }}>CONTACTS</span>
+            <div style={{ flex: 1, height: 1, background: "#cbd5e1" }} />
+          </div>
+          <div style={{ fontSize: 5.5, color: "#333", display: "grid", gap: 1, marginBottom: 5 }}>
+            <div><strong>PHONE:</strong> (+49) 30 987</div>
+            <div><strong>EMAIL:</strong> d.gallego@site</div>
+            <div><strong>ADDRESS:</strong> Berlin, Germany</div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 3 }}>
+            <span style={{ color: "#505f9e", fontSize: 6 }}>◆</span>
+            <span style={{ fontSize: 6.5, fontWeight: 800 }}>SKILLS</span>
+            <div style={{ flex: 1, height: 1, background: "#cbd5e1" }} />
+          </div>
+          <div style={{ fontSize: 5.5, color: "#333", paddingLeft: 4 }}>
+            <div>• Project Delivery</div>
+            <div>• Agile & Scrum</div>
+            <div>• Stakeholder Mgmt</div>
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 4 }}>
+            <span style={{ fontSize: 6.5, fontWeight: 800 }}>EXPERIENCE</span>
+            <div style={{ flex: 1, height: 1, background: "#cbd5e1" }} />
+          </div>
+
+          <div style={{ paddingLeft: 8, position: "relative", marginBottom: 6 }}>
+            <span style={{ position: "absolute", left: 0, top: 2, width: 4, height: 4, borderRadius: "50%", border: "1px solid #505f9e" }} />
+            <div style={{ fontSize: 5.5, color: "#64748b" }}>09/2019 – Current Berlin</div>
+            <div style={{ fontSize: 6.5, fontWeight: 700 }}>Sr. Project Manager | Siemens</div>
+            <PLine w="95%" h={2.5} color="#94a3b8" mb={1} />
+            <PLine w="80%" h={2.5} color="#94a3b8" mb={0} />
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 4 }}>
+            <span style={{ fontSize: 6.5, fontWeight: 800 }}>EDUCATION</span>
+            <div style={{ flex: 1, height: 1, background: "#cbd5e1" }} />
+          </div>
+          <div style={{ paddingLeft: 8, position: "relative" }}>
+            <span style={{ position: "absolute", left: 0, top: 2, width: 4, height: 4, borderRadius: "50%", border: "1px solid #505f9e" }} />
+            <div style={{ fontSize: 5.5, color: "#64748b" }}>2012 – 2014 Berlin</div>
+            <div style={{ fontSize: 6.5, fontWeight: 700 }}>M.S. Engineering Mgmt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Templates Catalog ──────────────────────────────────── */
 const CATEGORIES = [
   { id: "Simple", label: "Simple", icon: "☆" },
@@ -165,6 +389,7 @@ const CATEGORIES = [
 ];
 
 const TEMPLATES = [
+  // Simple Templates (from earlier reference images)
   {
     id: "simple_1",
     name: "Classic Timeline",
@@ -184,6 +409,38 @@ const TEMPLATES = [
     accent: "#1e293b",
     description: "Centered serif title, dashed divider, and clean 2-column skills list",
     PreviewComp: Simple2Preview,
+  },
+
+  // Modern Templates (from new reference images)
+  {
+    id: "modern_1",
+    name: "Editorial Blush",
+    category: "Modern",
+    tag: "Trending",
+    tagColor: "#f43f5e",
+    accent: "#f43f5e",
+    description: "Chic blush aesthetic, boxed contact table, and rose star accents",
+    PreviewComp: Modern1Preview,
+  },
+  {
+    id: "modern_2",
+    name: "Steel Blue Executive",
+    category: "Modern",
+    tag: "Popular",
+    tagColor: "#3b82f6",
+    accent: "#64748b",
+    description: "Dual steel-blue header banner with integrated summary and 35/65 split body",
+    PreviewComp: Modern2Preview,
+  },
+  {
+    id: "modern_3",
+    name: "Europass Indigo",
+    category: "Modern",
+    tag: "New",
+    tagColor: "#4f46e5",
+    accent: "#505f9e",
+    description: "Deep indigo banner with diamond section bullets and circular timeline indicators",
+    PreviewComp: Modern3Preview,
   },
 ];
 

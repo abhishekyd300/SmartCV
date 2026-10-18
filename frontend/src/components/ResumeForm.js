@@ -9,6 +9,7 @@ const defaultForm = {
   experience: [],
   education: [{ degree: "", institution: "", year: "", details: "" }],
   skills: "",
+  languages: "",
   certifications: "",
   achievements: "",
 };
@@ -60,6 +61,11 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
       formattedAch = formattedAch.map(a => typeof a === "string" ? `• ${a}` : `• ${a.description}`).join("\n");
     }
 
+    let formattedLang = initialData.languages || "";
+    if (Array.isArray(formattedLang)) {
+      formattedLang = formattedLang.join(", ");
+    }
+
     return {
       personalInfo: {
         name: initialData.personalInfo?.name || "",
@@ -71,12 +77,13 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
         leetcode: initialData.personalInfo?.leetcode || "",
         portfolio: initialData.personalInfo?.portfolio || "",
       },
-      targetRole: initialData.targetRole || "",
+      targetRole: initialData.targetRole || initialData.personalInfo?.title || "",
       jobDescription: initialData.jobDescription || "",
       projects: formattedProjects.length > 0 ? formattedProjects : [{ title: "", subtitle: "", techStack: "", github: "", live: "", description: "" }],
       experience: formattedExp,
       education: initialData.education?.length > 0 ? initialData.education : [{ degree: "", institution: "", year: "", details: "" }],
       skills: formattedSkills,
+      languages: formattedLang,
       certifications: formattedCerts,
       achievements: formattedAch,
     };
@@ -177,7 +184,15 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
             <span style={{ fontSize: 13, color: "#94a3b8" }}>Step 2 of 3: Details & Content</span>
             <span style={{ color: "rgba(255,255,255,0.2)" }}>|</span>
             <span style={{ fontSize: 13, color: "#cbd5e1" }}>
-              Template: <strong style={{ color: "#a855f7" }}>{selectedTemplate === "simple_2" ? "Clean Centered Serif" : "Classic Timeline"}</strong>
+              Template: <strong style={{ color: "#a855f7" }}>
+                {({
+                  simple_1: "Classic Timeline",
+                  simple_2: "Clean Centered Serif",
+                  modern_1: "Editorial Blush",
+                  modern_2: "Steel Blue Executive",
+                  modern_3: "Europass Indigo",
+                })[selectedTemplate] || "Classic Timeline"}
+              </strong>
             </span>
           </div>
 
@@ -203,9 +218,9 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
             {error && <div className="error-msg">⚠️ {error}</div>}
             <div className="form-row">
               <div className="form-group">
-                <label>Job Title You're Applying For *</label>
+                <label>Target Role / Job Title (Headline under your name on resume) *</label>
                 <input
-                  placeholder="e.g. Full Stack Developer / Software Engineer"
+                  placeholder="e.g. Senior Project Manager / Web Designer / Full Stack Developer"
                   value={form.targetRole}
                   onChange={(e) => setForm((f) => ({ ...f, targetRole: e.target.value }))}
                   required
@@ -339,6 +354,23 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
               />
               <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 8 }}>
                 💡 You can group by category or separate with commas. AI will format into clean categories.
+              </div>
+            </div>
+          </div>
+
+          {/* Languages (Optional) */}
+          <div className="glass-card-3d">
+            <div className="form-section-title">🌐 Languages (Optional)</div>
+            <div className="form-group">
+              <label>Languages Known & Proficiency</label>
+              <textarea
+                placeholder="e.g. English (Native), German (Fluent), Spanish (Intermediate)"
+                value={form.languages}
+                onChange={(e) => setForm((f) => ({ ...f, languages: e.target.value }))}
+                style={{ minHeight: 70 }}
+              />
+              <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 8 }}>
+                💡 Displayed on international & modern resume templates (e.g., Europass style).
               </div>
             </div>
           </div>

@@ -1,6 +1,15 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { SimpleTemplate1, SimpleTemplate2 } from "./templates/simple";
+import { ModernTemplate1, ModernTemplate2, ModernTemplate3 } from "./templates/modern";
+
+const TEMPLATE_NAMES = {
+  simple_1: "Classic Timeline",
+  simple_2: "Clean Centered Serif",
+  modern_1: "Editorial Blush",
+  modern_2: "Steel Blue Executive",
+  modern_3: "Europass Indigo",
+};
 
 export default function ResumePreview({ resume, onBack, selectedTemplate = "simple_1", onChangeTemplate }) {
   const printRef = useRef();
@@ -12,7 +21,23 @@ export default function ResumePreview({ resume, onBack, selectedTemplate = "simp
 
   if (!resume) return null;
 
-  const templateName = selectedTemplate === "simple_2" ? "Clean Centered Serif" : "Classic Timeline";
+  const templateName = TEMPLATE_NAMES[selectedTemplate] || "Classic Timeline";
+
+  const renderTemplate = () => {
+    switch (selectedTemplate) {
+      case "simple_2":
+        return <SimpleTemplate2 resume={resume} />;
+      case "modern_1":
+        return <ModernTemplate1 resume={resume} />;
+      case "modern_2":
+        return <ModernTemplate2 resume={resume} />;
+      case "modern_3":
+        return <ModernTemplate3 resume={resume} />;
+      case "simple_1":
+      default:
+        return <SimpleTemplate1 resume={resume} />;
+    }
+  };
 
   return (
     <div>
@@ -58,11 +83,7 @@ export default function ResumePreview({ resume, onBack, selectedTemplate = "simp
         `}</style>
 
         <div className="resume-wrapper">
-          {selectedTemplate === "simple_2" ? (
-            <SimpleTemplate2 resume={resume} />
-          ) : (
-            <SimpleTemplate1 resume={resume} />
-          )}
+          {renderTemplate()}
         </div>
       </div>
     </div>

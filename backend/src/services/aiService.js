@@ -17,8 +17,11 @@ function parseJsonFromText(text) {
   return JSON.parse(cleaned.substring(start, end + 1));
 }
 
-function sanitizeAndEnforceIntegrity(result, resumeData, validProjects, validExperience, validEducation, trimmedSkills, trimmedCerts, trimmedAch) {
+function sanitizeAndEnforceIntegrity(result, resumeData, validProjects, validExperience, validEducation, trimmedSkills, trimmedCerts, trimmedAch, trimmedLanguages) {
   const sanitized = { ...result };
+
+  // Retain targetRole
+  sanitized.targetRole = resumeData.targetRole || sanitized.targetRole || "";
 
   // 1. Personal Info - only keep provided fields
   sanitized.personalInfo = {
@@ -30,7 +33,17 @@ function sanitizeAndEnforceIntegrity(result, resumeData, validProjects, validExp
     github: resumeData.personalInfo?.github || "",
     leetcode: resumeData.personalInfo?.leetcode || "",
     portfolio: resumeData.personalInfo?.portfolio || "",
+    title: resumeData.targetRole || sanitized.targetRole || "",
   };
+
+  // Languages
+  if (!trimmedLanguages) {
+    sanitized.languages = [];
+  } else if (Array.isArray(sanitized.languages) && sanitized.languages.length > 0) {
+    // keep array formatted by AI
+  } else {
+    sanitized.languages = trimmedLanguages.split(/[\n,;]+/).map(l => l.replace(/^[•\-\*]\s*/, "").trim()).filter(Boolean);
+  }
 
   // 2. Projects - if user provided no projects, strictly return empty array
   if (validProjects.length === 0) {
@@ -138,6 +151,7 @@ export async function generateResume(resumeData) {
     skills = "",
     certifications = "",
     achievements = "",
+    languages = "",
     targetRole = "",
     jobDescription = ""
   } = resumeData;
@@ -158,6 +172,7 @@ export async function generateResume(resumeData) {
   const trimmedSkills = typeof skills === "string" ? skills.trim() : "";
   const trimmedCertifications = typeof certifications === "string" ? certifications.trim() : "";
   const trimmedAchievements = typeof achievements === "string" ? achievements.trim() : "";
+  const trimmedLanguages = typeof languages === "string" ? languages.trim() : "";
 
   // Prepare input sections for prompt
   const projectsSection = validProjects.length > 0
@@ -201,7 +216,11 @@ export async function generateResume(resumeData) {
    - Include ONLY achievements listed under "Provided Achievements" below.
    - If none provided, return "achievements": [].
    - DO NOT invent achievements.
-7. CONTACT / PERSONAL INFO:
+7. LANGUAGES:
+   - Include ONLY languages listed under "Provided Languages" below.
+   - If none provided, return "languages": [].
+   - DO NOT invent languages.
+8. CONTACT / PERSONAL INFO:
    - Use ONLY the contact values provided. If a field is blank, output "" for that field. Do NOT invent links or contact numbers.
 
 === USER INPUT DATA ===
@@ -236,6 +255,9 @@ ${trimmedCertifications || "None provided by user."}
 Provided Achievements:
 ${trimmedAchievements || "None provided by user."}
 
+Provided Languages:
+${trimmedLanguages || "None provided by user."}
+
 Return ONLY raw JSON matching this structure:
 {
   "personalInfo": {
@@ -248,6 +270,7 @@ Return ONLY raw JSON matching this structure:
     "leetcode": "${personalInfo.leetcode || ""}",
     "portfolio": "${personalInfo.portfolio || ""}"
   },
+  "targetRole": "${targetRole || ""}",
   "summary": "Professional summary based strictly on the user's provided background and target role",
   "education": [
     {
@@ -262,7 +285,8 @@ Return ONLY raw JSON matching this structure:
   "projects": [],
   "experience": [],
   "certifications": [],
-  "achievements": []
+  "achievements": [],
+  "languages": []
 }`;
 
   let parsedResult = null;
@@ -310,7 +334,8 @@ Return ONLY raw JSON matching this structure:
     validEducation,
     trimmedSkills,
     trimmedCertifications,
-    trimmedAchievements
+    trimmedAchievements,
+    trimmedLanguages
   );
 }
 
