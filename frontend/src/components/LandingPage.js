@@ -1,301 +1,442 @@
 import React from "react";
 
-export default function LandingPage({ onStart }) {
-  return (
-    <div style={{ display: "grid", gap: 64, padding: "20px 0 60px" }}>
+const MOCKUP_IMG = "/mockup.jpg";
 
-      {/* Hero Section */}
-      <section style={{
-        textAlign: "center",
-        maxWidth: 900,
-        margin: "0 auto",
-        position: "relative"
-      }}>
+const features1 = [
+  "AI-powered resume generation in seconds",
+  "ATS-optimized format guaranteed",
+  "Real-time preview as you build",
+  "Download as clean PDF instantly",
+];
+
+const features2 = [
+  "Skills displayed as professional tags",
+  "Tailored bullet points for each role",
+  "Professional typography & formatting",
+  "Smart section ordering & layout",
+];
+
+const features3 = [
+  "Instant ATS compatibility check",
+  "Keyword optimization for job roles",
+  "Improve score from 68% to 91%+",
+  "Real-time optimization suggestions",
+];
+
+const CheckIcon = ({ color = "#f97316" }) => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+    <circle cx="9" cy="9" r="9" fill={color} opacity="0.15" />
+    <path d="M5.5 9l2.5 2.5 4.5-4.5" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const SectionBadge = ({ label, color }) => (
+  <div style={{
+    display: "inline-flex", alignItems: "center", gap: 6,
+    background: `${color}18`, border: `1px solid ${color}40`,
+    borderRadius: 20, padding: "4px 14px", fontSize: 12,
+    fontWeight: 600, color, marginBottom: 20,
+    letterSpacing: 0.3,
+  }}>
+    <span>▶ {label}</span>
+  </div>
+);
+
+function FeatureRow({ badge, badgeColor, title, subtitle, features, ctaLabel, onStart, mockupSrc, reverse, gradient }) {
+  return (
+    <section style={{
+      display: "flex",
+      flexDirection: reverse ? "row-reverse" : "row",
+      alignItems: "center",
+      gap: 60,
+      padding: "80px 80px",
+      background: gradient || "white",
+      flexWrap: "wrap",
+    }}>
+      {/* Text Side */}
+      <div style={{ flex: "0 0 420px", maxWidth: 420 }}>
+        <SectionBadge label={badge} color={badgeColor} />
+        <h2 style={{
+          fontSize: 36, fontWeight: 800, color: "#0f172a",
+          fontFamily: "'Outfit', sans-serif", lineHeight: 1.2,
+          marginBottom: 16,
+        }}>{title}</h2>
+        <p style={{
+          fontSize: 15, color: "#475569", lineHeight: 1.75,
+          marginBottom: 28,
+        }}>{subtitle}</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 36 }}>
+          {features.map((f, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, color: "#334155" }}>
+              <CheckIcon color={badgeColor} />
+              <span>{f}</span>
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={onStart}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: badgeColor === "#f97316" ? "linear-gradient(135deg, #f97316, #ef4444)" : "linear-gradient(135deg, #3b82f6, #6366f1)",
+            color: "white", border: "none", borderRadius: 50,
+            padding: "14px 32px", fontSize: 15, fontWeight: 700,
+            cursor: "pointer",
+            boxShadow: badgeColor === "#f97316" ? "0 8px 24px rgba(249,115,22,0.35)" : "0 8px 24px rgba(59,130,246,0.35)",
+            transition: "all 0.25s ease",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = badgeColor === "#f97316" ? "0 12px 32px rgba(249,115,22,0.5)" : "0 12px 32px rgba(59,130,246,0.5)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = badgeColor === "#f97316" ? "0 8px 24px rgba(249,115,22,0.35)" : "0 8px 24px rgba(59,130,246,0.35)"; }}
+        >
+          ⚡ {ctaLabel} →
+        </button>
+      </div>
+
+      {/* Mockup Side */}
+      <div style={{ flex: 1, minWidth: 300, display: "flex", justifyContent: "center" }}>
         <div style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          background: "rgba(99, 102, 241, 0.15)",
-          border: "1px solid rgba(99, 102, 241, 0.3)",
-          padding: "6px 18px",
-          borderRadius: 99,
-          fontSize: 14,
-          fontWeight: 600,
-          color: "#a5b4fc",
-          marginBottom: 24,
-          boxShadow: "0 0 20px rgba(99, 102, 241, 0.2)"
+          background: "white",
+          borderRadius: 16,
+          boxShadow: "0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)",
+          overflow: "hidden",
+          maxWidth: 560,
+          width: "100%",
+          transform: "perspective(1200px) rotateY(-4deg)",
+          transition: "transform 0.4s ease",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "perspective(1200px) rotateY(0deg) scale(1.01)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = "perspective(1200px) rotateY(-4deg)"; }}
+        >
+          <img src={mockupSrc} alt="App Preview" style={{ width: "100%", display: "block" }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StatsBar() {
+  const stats = [
+    { value: "10K+", label: "Resumes Generated" },
+    { value: "98%", label: "ATS Pass Rate" },
+    { value: "3.2×", label: "More Interviews" },
+    { value: "< 60s", label: "Generation Time" },
+  ];
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)",
+      borderTop: "1px solid #e2e8f0",
+      borderBottom: "1px solid #e2e8f0",
+      padding: "40px 80px",
+      display: "flex", justifyContent: "center", gap: 80, flexWrap: "wrap",
+    }}>
+      {stats.map((s, i) => (
+        <div key={i} style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 36, fontWeight: 800, color: "#1e293b", fontFamily: "'Outfit', sans-serif", lineHeight: 1 }}>
+            {s.value}
+          </div>
+          <div style={{ fontSize: 13, color: "#64748b", marginTop: 6, fontWeight: 500 }}>{s.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function HeroSection({ onStart, mockupSrc }) {
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fdf4ff 70%, #f0f4ff 100%)",
+      minHeight: "92vh",
+      display: "flex",
+      alignItems: "center",
+      padding: "60px 80px",
+      gap: 60,
+      flexWrap: "wrap",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Decorative blobs */}
+      <div style={{
+        position: "absolute", top: -60, right: -60, width: 400, height: 400,
+        background: "radial-gradient(circle, rgba(249,115,22,0.1) 0%, transparent 70%)",
+        borderRadius: "50%", pointerEvents: "none",
+      }} />
+      <div style={{
+        position: "absolute", bottom: -80, left: -40, width: 300, height: 300,
+        background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+        borderRadius: "50%", pointerEvents: "none",
+      }} />
+
+      {/* Left */}
+      <div style={{ flex: "0 0 460px", maxWidth: 460, position: "relative", zIndex: 1 }}>
+        {/* Icon */}
+        <div style={{
+          width: 56, height: 56, background: "linear-gradient(135deg, #fff7ed, #fed7aa)",
+          borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 26, marginBottom: 28, border: "1px solid #fdba74",
+          boxShadow: "0 4px 12px rgba(249,115,22,0.15)",
         }}>
-          ⚡ Powered by Next-Gen AI Resume Engine
+          📄
         </div>
 
         <h1 style={{
-          fontSize: "clamp(36px, 5vw, 64px)",
-          fontWeight: 800,
-          lineHeight: 1.15,
+          fontSize: "clamp(32px, 4vw, 52px)",
+          fontWeight: 800, color: "#0f172a",
           fontFamily: "'Outfit', sans-serif",
-          marginBottom: 20,
-          background: "linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #a855f7 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          letterSpacing: "-1px"
+          lineHeight: 1.15, marginBottom: 20,
         }}>
-          75% of Resumes Are Rejected by ATS Filters Before a Human Sees Them.
+          AI Resume Builder
         </h1>
 
         <p style={{
-          fontSize: 18,
-          color: "#94a3b8",
-          lineHeight: 1.6,
-          marginBottom: 36,
-          maxWidth: 720,
-          margin: "0 auto 36px"
+          fontSize: 16, color: "#475569", lineHeight: 1.75, marginBottom: 32,
+          maxWidth: 420,
         }}>
-          Bad formatting, unoptimized keywords, and cluttered structures cost millions of talented candidates their dream jobs. SmartCV AI builds single-page, ATS-optimized resumes that land interviews 3x faster.
+          Create professional resumes from scratch with our AI-powered builder. Get ATS-optimized resumes tailored to your target role, and download your perfect resume in under a minute. No design skills required!
         </p>
 
-        <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
-          <button className="btn-3d-primary" onClick={onStart} style={{ padding: "16px 44px", fontSize: 18 }}>
-            Build Your AI Resume Now 🚀
-          </button>
-        </div>
-      </section>
-
-      {/* 3D Interactive Stats Card Section */}
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
-        <div className="glass-card-3d" style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 44, marginBottom: 12 }}>❌</div>
-          <div style={{ fontSize: 38, fontWeight: 800, color: "#ef4444", fontFamily: "'Outfit', sans-serif" }}>
-            75%+
-          </div>
-          <div style={{ fontWeight: 700, fontSize: 16, color: "#f8fafc", margin: "8px 0" }}>
-            Rejected by ATS Systems
-          </div>
-          <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.5 }}>
-            Automated applicant tracking filters instantly discard resumes with multi-column tables, fancy icons, or non-standard fonts.
-          </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 40 }}>
+          {features1.map((f, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, color: "#334155" }}>
+              <CheckIcon color="#f97316" />
+              <span>{f}</span>
+            </div>
+          ))}
         </div>
 
-        <div className="glass-card-3d" style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 44, marginBottom: 12 }}>⏱️</div>
-          <div style={{ fontSize: 38, fontWeight: 800, color: "#f59e0b", fontFamily: "'Outfit', sans-serif" }}>
-            6 Seconds
-          </div>
-          <div style={{ fontWeight: 700, fontSize: 16, color: "#f8fafc", margin: "8px 0" }}>
-            Average Recruiter Initial Scan
-          </div>
-          <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.5 }}>
-            Recruiters scan resumes in seconds. Cluttered layouts mean your key achievements get overlooked immediately.
-          </p>
-        </div>
+        <button
+          onClick={onStart}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: "linear-gradient(135deg, #f97316, #ef4444)",
+            color: "white", border: "none", borderRadius: 50,
+            padding: "16px 40px", fontSize: 16, fontWeight: 700,
+            cursor: "pointer",
+            boxShadow: "0 10px 30px rgba(249,115,22,0.4)",
+            transition: "all 0.25s ease",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 16px 40px rgba(249,115,22,0.55)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 10px 30px rgba(249,115,22,0.4)"; }}
+        >
+          ⚡ Try It Now →
+        </button>
+      </div>
 
-        <div className="glass-card-3d" style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 44, marginBottom: 12 }}>🏆</div>
-          <div style={{ fontSize: 38, fontWeight: 800, color: "#10b981", fontFamily: "'Outfit', sans-serif" }}>
-            3.2x More
-          </div>
-          <div style={{ fontWeight: 700, fontSize: 16, color: "#f8fafc", margin: "8px 0" }}>
-            Interviews with SmartCV AI
-          </div>
-          <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.5 }}>
-            Our clean single-page layout with Georgia headers & Bookman body guarantees 100% ATS readability and maximum recruiter impact.
-          </p>
-        </div>
-      </section>
-
-      {/* Feature Comparison Section */}
-      <section className="glass-card-3d" style={{ padding: 48 }}>
-        <h2 style={{
-          textAlign: "center",
-          fontSize: 32,
-          fontFamily: "'Outfit', sans-serif",
-          fontWeight: 800,
-          marginBottom: 36,
-          color: "#fff"
-        }}>
-          Why Candidates Choose <span style={{ color: "#a855f7" }}>SmartCV AI</span>
-        </h2>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32 }}>
-          <div style={{
-            background: "rgba(239, 68, 68, 0.08)",
-            border: "1px solid rgba(239, 68, 68, 0.2)",
-            borderRadius: 18,
-            padding: 24
-          }}>
-            <h3 style={{ color: "#fca5a5", fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
-              ❌ Traditional / Graphic Resumes
-            </h3>
-            <ul style={{ listStyle: "none", display: "grid", gap: 12, fontSize: 14, color: "#cbd5e1" }}>
-              <li>⚠️ Complex graphics parsed as blank noise by ATS</li>
-              <li>⚠️ Skill bars and star ratings confuse hiring managers</li>
-              <li>⚠️ Inconsistent font sizes cause page overflow</li>
-              <li>⚠️ Hours spent manually aligning columns</li>
-            </ul>
-          </div>
-
-          <div style={{
-            background: "rgba(16, 185, 129, 0.08)",
-            border: "1px solid rgba(16, 185, 129, 0.3)",
-            borderRadius: 18,
-            padding: 24,
-            boxShadow: "0 0 30px rgba(16, 185, 129, 0.15)"
-          }}>
-            <h3 style={{ color: "#6ee7b7", fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
-              ✅ SmartCV AI Format
-            </h3>
-            <ul style={{ listStyle: "none", display: "grid", gap: 12, fontSize: 14, color: "#e2e8f0" }}>
-              <li>✨ 100% ATS Parsing Rate across all major ATS tools</li>
-              <li>✨ Professional typography (Georgia & Bookman Old Style)</li>
-              <li>✨ Automated AI bullet point generation tailored to job role</li>
-              <li>✨ Instant PDF download ready for one-click application</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Dummy Resume Preview Showcase */}
-      <section style={{ textAlign: "center" }}>
-        <h2 style={{
-          fontSize: 32,
-          fontFamily: "'Outfit', sans-serif",
-          fontWeight: 800,
-          marginBottom: 12,
-          color: "#fff"
-        }}>
-          Preview The Proven Resume Format
-        </h2>
-        <p style={{ color: "#94a3b8", marginBottom: 32 }}>
-          Clean, concise, and structured specifically for software engineers, developers, and tech professionals.
-        </p>
-
-        {/* 3D Floating Mockup Wrapper */}
+      {/* Right — Floating Mockup */}
+      <div style={{ flex: 1, minWidth: 300, display: "flex", justifyContent: "center", position: "relative", zIndex: 1 }}>
         <div style={{
-          position: "relative",
-          maxWidth: 780,
-          margin: "0 auto",
-          transform: "perspective(1200px) rotateX(6deg) translateY(0)",
-          transition: "all 0.5s ease",
-          boxShadow: "0 30px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.3)",
-          borderRadius: 12,
-          overflow: "hidden"
-        }}>
+          background: "white",
+          borderRadius: 20,
+          boxShadow: "0 32px 80px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.08)",
+          overflow: "hidden",
+          maxWidth: 580,
+          width: "100%",
+          transform: "perspective(1400px) rotateY(-6deg) rotateX(2deg)",
+          transition: "transform 0.4s ease",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "perspective(1400px) rotateY(-2deg) rotateX(0deg) scale(1.01)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = "perspective(1400px) rotateY(-6deg) rotateX(2deg)"; }}
+        >
+          <img src={mockupSrc} alt="SmartCV App Preview" style={{ width: "100%", display: "block" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TemplateShowcase({ onStart }) {
+  const templates = [
+    { name: "Professional", colors: ["#1e40af", "#e2e8f0"] },
+    { name: "Modern", colors: ["#7c3aed", "#ede9fe"] },
+    { name: "Classic", colors: ["#0f172a", "#f1f5f9"] },
+  ];
+
+  const ResumeCard = ({ name, colors, rating }) => (
+    <div
+      onClick={onStart}
+      style={{
+      background: "white",
+      borderRadius: 16,
+      boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+      overflow: "hidden",
+      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+      cursor: "pointer",
+      flexShrink: 0,
+      width: 240,
+    }}
+      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-6px) scale(1.02)"; e.currentTarget.style.boxShadow = "0 20px 48px rgba(0,0,0,0.15)"; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.1)"; }}
+    >
+      {/* Template Header accent */}
+      <div style={{ height: 8, background: `linear-gradient(90deg, ${colors[0]}, ${colors[1]})` }} />
+      <div style={{ padding: "20px 20px 24px" }}>
+        {/* Fake resume lines */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <div style={{ width: 90, height: 10, background: "#1e293b", borderRadius: 3 }} />
           <div style={{
-            background: "#ffffff",
-            padding: "36px 44px",
-            textAlign: "left",
-            color: "#000000",
-            fontSize: 13,
-            lineHeight: 1.35,
-            fontFamily: "'Bookman Old Style', 'Bookman', Georgia, serif"
+            background: "#fef9c3", border: "1px solid #fde047",
+            borderRadius: 12, padding: "2px 8px",
+            fontSize: 11, fontWeight: 700, color: "#854d0e",
+          }}>⭐ {rating}</div>
+        </div>
+        <div style={{ width: 130, height: 7, background: "#64748b", borderRadius: 3, marginBottom: 16 }} />
+        {[100, 80, 90, 70, 85].map((w, i) => (
+          <div key={i} style={{ width: `${w}%`, height: 5, background: "#e2e8f0", borderRadius: 3, marginBottom: 7 }} />
+        ))}
+        <div style={{ marginTop: 14 }}>
+          <div style={{ width: 70, height: 7, background: colors[0], borderRadius: 3, marginBottom: 8 }} />
+          {[90, 75].map((w, i) => (
+            <div key={i} style={{ width: `${w}%`, height: 5, background: "#e2e8f0", borderRadius: 3, marginBottom: 6 }} />
+          ))}
+        </div>
+        <div style={{ marginTop: 12, fontWeight: 600, fontSize: 12, color: colors[0] }}>{name}</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <section style={{
+      padding: "90px 80px",
+      background: "linear-gradient(180deg, #f8fafc 0%, white 100%)",
+      textAlign: "center",
+    }}>
+      <h2 style={{
+        fontSize: 44, fontWeight: 800, color: "#0f172a",
+        fontFamily: "'Outfit', sans-serif", marginBottom: 8, lineHeight: 1.2,
+      }}>
+        Generate Your Perfect
+        <br /><span style={{ color: "#3b82f6" }}>AI Resume</span>
+      </h2>
+      <p style={{ fontSize: 16, color: "#475569", marginBottom: 52, maxWidth: 540, margin: "16px auto 52px" }}>
+        AI-powered, ATS-optimized resumes trusted by thousands of professionals worldwide. Built in under 60 seconds.
+      </p>
+
+      {/* Filter pills */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 52, flexWrap: "wrap" }}>
+        {["✦ All Styles", "Professional", "Modern", "Classic", "ATS-Optimized"].map((tab, i) => (
+          <div key={tab} style={{
+            padding: "9px 22px", borderRadius: 50, fontSize: 14, fontWeight: 600,
+            cursor: "pointer",
+            background: i === 0 ? "linear-gradient(135deg, #3b82f6, #6366f1)" : "white",
+            color: i === 0 ? "white" : "#475569",
+            border: i === 0 ? "none" : "1px solid #e2e8f0",
+            boxShadow: i === 0 ? "0 4px 16px rgba(59,130,246,0.3)" : "0 1px 4px rgba(0,0,0,0.06)",
+            transition: "all 0.2s",
           }}>
-            {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: 16 }}>
-              <div style={{
-                fontSize: 22,
-                fontWeight: 700,
-                fontFamily: "Georgia, serif",
-                letterSpacing: 1,
-                textTransform: "uppercase"
-              }}>
-                ALEX MORGAN
-              </div>
-              <div style={{ fontSize: 12, color: "#111", marginTop: 4 }}>
-                alex.morgan@example.com  |  +1 (555) 019-2834  |  LinkedIn  |  GitHub  |  Portfolio
-              </div>
-            </div>
-
-            {/* SUMMARY */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{
-                fontFamily: "Georgia, serif",
-                fontSize: 13,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                borderBottom: "1px solid #000",
-                paddingBottom: 1,
-                marginBottom: 4
-              }}>
-                SUMMARY
-              </div>
-              <div>
-                Computer Science undergraduate with hands-on experience building full-stack MERN applications and AI-driven platforms. Skilled in JavaScript, React.js, Node.js, and MongoDB, with a strong foundation in Data Structures, Algorithms, and System Design. AWS Certified Cloud Practitioner.
-              </div>
-            </div>
-
-            {/* EDUCATION */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{
-                fontFamily: "Georgia, serif",
-                fontSize: 13,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                borderBottom: "1px solid #000",
-                paddingBottom: 1,
-                marginBottom: 4
-              }}>
-                EDUCATION
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <strong>State University of Technology, San Francisco, CA</strong>
-                <span>2021 – 2025</span>
-              </div>
-              <div>Bachelor of Science in Computer Science & Engineering</div>
-              <div>GPA: 3.8 / 4.0</div>
-            </div>
-
-            {/* TECHNICAL SKILLS */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{
-                fontFamily: "Georgia, serif",
-                fontSize: 13,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                borderBottom: "1px solid #000",
-                paddingBottom: 1,
-                marginBottom: 4
-              }}>
-                TECHNICAL SKILLS
-              </div>
-              <div><strong>Languages:</strong> C/C++, JavaScript, TypeScript, Python</div>
-              <div><strong>Frontend:</strong> HTML5, CSS3, React.js, Next.js</div>
-              <div><strong>Backend:</strong> Node.js, Express.js, REST APIs</div>
-              <div><strong>Database:</strong> PostgreSQL, MongoDB</div>
-              <div><strong>Tools:</strong> Git, GitHub, Docker, VS Code, AWS</div>
-              <div><strong>Core CS:</strong> Data Structures & Algorithms, OOP, DBMS, Operating Systems</div>
-            </div>
-
-            {/* PROJECTS */}
-            <div>
-              <div style={{
-                fontFamily: "Georgia, serif",
-                fontSize: 13,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                borderBottom: "1px solid #000",
-                paddingBottom: 1,
-                marginBottom: 4
-              }}>
-                PROJECTS
-              </div>
-              <div>
-                <strong>DevMetrics — Developer Analytics Platform</strong> | GitHub
-                <div style={{ fontStyle: "italic", color: "#444" }}>React.js, Node.js, Express.js, MongoDB, Chart.js</div>
-                <ul style={{ margin: "2px 0 0 16px", padding: 0 }}>
-                  <li>Developed an open-source web application for developer productivity tracking and automated repo analytics.</li>
-                  <li>Implemented JWT authentication and role-based access control supporting over 1,000 active users.</li>
-                </ul>
-              </div>
-            </div>
+            {tab}
           </div>
-        </div>
+        ))}
+      </div>
 
-        <div style={{ marginTop: 40 }}>
-          <button className="btn-3d-primary" onClick={onStart} style={{ padding: "16px 40px" }}>
-            Start Building Your Resume Free ✨
-          </button>
-        </div>
-      </section>
+      {/* Cards row */}
+      <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", marginBottom: 52 }}>
+        <ResumeCard name="Professional" colors={["#1e40af", "#bfdbfe"]} rating="4.5" />
+        <ResumeCard name="ATS-Optimized" colors={["#7c3aed", "#ede9fe"]} rating="4.8" />
+        <ResumeCard name="Modern Classic" colors={["#0f172a", "#cbd5e1"]} rating="4.7" />
+      </div>
 
+      <button
+        onClick={onStart}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 10,
+          background: "linear-gradient(135deg, #f97316, #ef4444)",
+          color: "white", border: "none", borderRadius: 50,
+          padding: "16px 44px", fontSize: 16, fontWeight: 700,
+          cursor: "pointer", boxShadow: "0 10px 28px rgba(249,115,22,0.38)",
+          transition: "all 0.25s ease",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 16px 40px rgba(249,115,22,0.52)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 10px 28px rgba(249,115,22,0.38)"; }}
+      >
+        ⚡ Build My Resume Free →
+      </button>
+    </section>
+  );
+}
+
+function FinalCTA({ onStart }) {
+  return (
+    <section style={{
+      background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+      padding: "100px 80px",
+      textAlign: "center",
+    }}>
+      <div style={{
+        display: "inline-flex", alignItems: "center", gap: 8,
+        background: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.4)",
+        borderRadius: 20, padding: "6px 18px", fontSize: 13,
+        color: "#a5b4fc", fontWeight: 600, marginBottom: 24,
+      }}>
+        ⚡ 100% Free · No Credit Card · Instant PDF
+      </div>
+      <h2 style={{
+        fontSize: 48, fontWeight: 800, color: "white",
+        fontFamily: "'Outfit', sans-serif", lineHeight: 1.15, marginBottom: 16,
+      }}>
+        Ready to Land More Interviews?
+      </h2>
+      <p style={{ color: "#94a3b8", fontSize: 17, lineHeight: 1.7, marginBottom: 44, maxWidth: 520, margin: "0 auto 44px" }}>
+        Join thousands who have already built ATS-beating resumes with SmartCV AI. Takes less than 60 seconds.
+      </p>
+      <button
+        onClick={onStart}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 10,
+          background: "linear-gradient(135deg, #f97316, #ef4444)",
+          color: "white", border: "none", borderRadius: 50,
+          padding: "18px 52px", fontSize: 18, fontWeight: 700,
+          cursor: "pointer", boxShadow: "0 12px 36px rgba(249,115,22,0.45)",
+          transition: "all 0.25s ease",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.02)"; e.currentTarget.style.boxShadow = "0 20px 48px rgba(249,115,22,0.6)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 12px 36px rgba(249,115,22,0.45)"; }}
+      >
+        ⚡ Start Building Free →
+      </button>
+    </section>
+  );
+}
+
+export default function LandingPage({ onStart }) {
+  return (
+    <div style={{ background: "white", margin: "-32px -20px", overflow: "hidden" }}>
+
+      {/* Section 1: Hero — AI Resume Builder */}
+      <HeroSection onStart={onStart} mockupSrc={MOCKUP_IMG} />
+
+      {/* Stats Bar */}
+      <StatsBar />
+
+      {/* Section 2: Smart Formatting */}
+      <FeatureRow
+        badge="3 Steps · Smart AI"
+        badgeColor="#f97316"
+        title="Smart Resume Formatting"
+        subtitle="Just fill in your details and let the AI handle the rest. Our engine creates professional, keyword-rich bullet points and perfectly structured sections — tailored to your exact target role."
+        features={features2}
+        ctaLabel="Try It Now"
+        onStart={onStart}
+        mockupSrc={MOCKUP_IMG}
+        gradient="white"
+      />
+
+      {/* Section 3: Template Showcase */}
+      <TemplateShowcase onStart={onStart} />
+
+      {/* Section 4: ATS Optimization */}
+      <FeatureRow
+        badge="3 Steps · ATS Checker"
+        badgeColor="#3b82f6"
+        title={"ATS Score Checker & Enhancer"}
+        subtitle="Our AI ensures your resume passes all major ATS systems. Get a targeted, keyword-optimized resume that's guaranteed to reach human recruiters — not the rejection pile."
+        features={features3}
+        ctaLabel="Try It Now"
+        onStart={onStart}
+        mockupSrc={MOCKUP_IMG}
+        reverse={true}
+        gradient="linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)"
+      />
+
+      {/* Final CTA */}
+      <FinalCTA onStart={onStart} />
     </div>
   );
 }
