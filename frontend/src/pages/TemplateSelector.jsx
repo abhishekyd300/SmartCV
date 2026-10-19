@@ -484,7 +484,7 @@ export function StepIndicator({ current = 1 }) {
               }}>
                 {isPast ? "✓" : st.num}
               </div>
-              <span style={{
+              <span className="step-indicator-label" style={{
                 fontSize: 15,
                 fontWeight: isActive ? 600 : 400,
                 color: isActive ? "#1e293b" : "#94a3b8",
@@ -495,7 +495,7 @@ export function StepIndicator({ current = 1 }) {
             </div>
 
             {i < steps.length - 1 && (
-              <div style={{
+              <div className="step-indicator-line" style={{
                 width: 60,
                 height: 1.5,
                 background: isPast ? "#16a34a" : "#e2e8f0",
@@ -647,10 +647,10 @@ export default function TemplateSelector({ onSelect, onSkip, initialSelected = "
           </button>
         </div>
       ) : (
-        <div style={{
+        <div className="template-grid" style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-          gap: 32,
+          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))",
+          gap: 28,
           alignItems: "stretch"
         }}>
           {filtered.map(tpl => {
@@ -843,7 +843,7 @@ export default function TemplateSelector({ onSelect, onSkip, initialSelected = "
 
       {/* Floating Bottom CTA Bar when a template is active */}
       {selectedId && (
-        <div style={{
+        <div className="template-floating-cta" style={{
           position: "fixed",
           bottom: 28,
           left: "50%",

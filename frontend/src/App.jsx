@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import LandingPage from "./components/LandingPage";
-import TemplateSelector from "./components/TemplateSelector";
-import ResumeForm from "./components/ResumeForm";
-import ResumePreview from "./components/ResumePreview";
+import LandingPage from "./pages/LandingPage";
+import TemplateSelector from "./pages/TemplateSelector";
+import ResumeForm from "./pages/ResumeForm";
+import ResumePreview from "./pages/ResumePreview";
 import Header from "./components/Header";
 import "./App.css";
 

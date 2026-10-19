@@ -30,22 +30,28 @@ Visit http://localhost:3000
 ## 📁 Project Structure
 
 ```
-ai-resume-builder/
+SmartCV/
 ├── backend/
 │   ├── src/
 │   │   ├── app.js                  # Express server entry
 │   │   ├── routes/resume.js        # API routes
-│   │   └── services/aiService.js   # Gemini AI integration
+│   │   └── services/aiService.js   # AI generation & formatting service
 │   ├── .env.example
 │   └── package.json
 └── frontend/
     ├── src/
     │   ├── components/
-    │   │   ├── Header.js
-    │   │   ├── ResumeForm.js       # Multi-step form
-    │   │   └── ResumePreview.js    # Resume + PDF export
-    │   ├── App.js
-    │   └── index.js
+    │   │   ├── Header.jsx          # Sticky navbar
+    │   │   └── templates/          # Resume layout templates (Modern & Simple)
+    │   ├── pages/
+    │   │   ├── LandingPage.jsx     # Landing page
+    │   │   ├── TemplateSelector.jsx# Template gallery page
+    │   │   ├── ResumeForm.jsx      # Resume builder form
+    │   │   └── ResumePreview.jsx   # Resume preview & PDF export
+    │   ├── App.jsx                 # Main application controller
+    │   ├── App.css                 # Application styling
+    │   ├── index.js                # React DOM entry point
+    │   └── index.css               # Global base styles
     └── package.json
 ```
 

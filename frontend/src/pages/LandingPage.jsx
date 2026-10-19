@@ -48,16 +48,16 @@ function FeatureRow({ badge, badgeColor, title, subtitle, features, ctaLabel, on
       display: "flex",
       flexDirection: reverse ? "row-reverse" : "row",
       alignItems: "center",
-      gap: 60,
-      padding: "80px 80px",
+      gap: "clamp(32px, 5vw, 60px)",
+      padding: "clamp(40px, 6vw, 80px) clamp(16px, 5vw, 80px)",
       background: gradient || "white",
       flexWrap: "wrap",
     }}>
       {/* Text Side */}
-      <div style={{ flex: "0 0 420px", maxWidth: 420 }}>
+      <div style={{ flex: "1 1 300px", maxWidth: 520 }}>
         <SectionBadge label={badge} color={badgeColor} />
         <h2 style={{
-          fontSize: 36, fontWeight: 800, color: "#0f172a",
+          fontSize: "clamp(26px, 4vw, 36px)", fontWeight: 800, color: "#0f172a",
           fontFamily: "'Outfit', sans-serif", lineHeight: 1.2,
           marginBottom: 16,
         }}>{title}</h2>
@@ -92,7 +92,7 @@ function FeatureRow({ badge, badgeColor, title, subtitle, features, ctaLabel, on
       </div>
 
       {/* Mockup Side */}
-      <div style={{ flex: 1, minWidth: 300, display: "flex", justifyContent: "center" }}>
+      <div style={{ flex: "1 1 280px", minWidth: 260, maxWidth: 560, display: "flex", justifyContent: "center" }}>
         <div style={{
           background: "white",
           borderRadius: 16,
@@ -125,12 +125,12 @@ function StatsBar() {
       background: "linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)",
       borderTop: "1px solid #e2e8f0",
       borderBottom: "1px solid #e2e8f0",
-      padding: "40px 80px",
-      display: "flex", justifyContent: "center", gap: 80, flexWrap: "wrap",
+      padding: "clamp(24px, 4vw, 40px) clamp(16px, 4vw, 80px)",
+      display: "flex", justifyContent: "center", gap: "clamp(24px, 5vw, 80px)", flexWrap: "wrap",
     }}>
       {stats.map((s, i) => (
         <div key={i} style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 36, fontWeight: 800, color: "#1e293b", fontFamily: "'Outfit', sans-serif", lineHeight: 1 }}>
+          <div style={{ fontSize: "clamp(28px, 4vw, 36px)", fontWeight: 800, color: "#1e293b", fontFamily: "'Outfit', sans-serif", lineHeight: 1 }}>
             {s.value}
           </div>
           <div style={{ fontSize: 13, color: "#64748b", marginTop: 6, fontWeight: 500 }}>{s.label}</div>
@@ -144,11 +144,11 @@ function HeroSection({ onStart, mockupSrc }) {
   return (
     <div style={{
       background: "linear-gradient(135deg, #fef9f5 0%, #fff5f0 30%, #fdf4ff 70%, #f0f4ff 100%)",
-      minHeight: "92vh",
+      minHeight: "88vh",
       display: "flex",
       alignItems: "center",
-      padding: "60px 80px",
-      gap: 60,
+      padding: "clamp(40px, 6vw, 60px) clamp(16px, 5vw, 80px)",
+      gap: "clamp(32px, 5vw, 60px)",
       flexWrap: "wrap",
       position: "relative",
       overflow: "hidden",
@@ -166,19 +166,19 @@ function HeroSection({ onStart, mockupSrc }) {
       }} />
 
       {/* Left */}
-      <div style={{ flex: "0 0 460px", maxWidth: 460, position: "relative", zIndex: 1 }}>
+      <div style={{ flex: "1 1 300px", maxWidth: 520, position: "relative", zIndex: 1 }}>
         {/* Icon */}
         <div style={{
-          width: 56, height: 56, background: "linear-gradient(135deg, #fff7ed, #fed7aa)",
-          borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 26, marginBottom: 28, border: "1px solid #fdba74",
+          width: 52, height: 52, background: "linear-gradient(135deg, #fff7ed, #fed7aa)",
+          borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 24, marginBottom: 24, border: "1px solid #fdba74",
           boxShadow: "0 4px 12px rgba(249,115,22,0.15)",
         }}>
           📄
         </div>
 
         <h1 style={{
-          fontSize: "clamp(32px, 4vw, 52px)",
+          fontSize: "clamp(32px, 5vw, 52px)",
           fontWeight: 800, color: "#0f172a",
           fontFamily: "'Outfit', sans-serif",
           lineHeight: 1.15, marginBottom: 20,
@@ -188,12 +188,12 @@ function HeroSection({ onStart, mockupSrc }) {
 
         <p style={{
           fontSize: 16, color: "#475569", lineHeight: 1.75, marginBottom: 32,
-          maxWidth: 420,
+          maxWidth: 440,
         }}>
           Create professional resumes from scratch with our AI-powered builder. Get ATS-optimized resumes tailored to your target role, and download your perfect resume in under a minute. No design skills required!
         </p>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 40 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 36 }}>
           {features1.map((f, i) => (
             <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, color: "#334155" }}>
               <CheckIcon color="#f97316" />
@@ -221,7 +221,7 @@ function HeroSection({ onStart, mockupSrc }) {
       </div>
 
       {/* Right — Floating Mockup */}
-      <div style={{ flex: 1, minWidth: 300, display: "flex", justifyContent: "center", position: "relative", zIndex: 1 }}>
+      <div style={{ flex: "1 1 280px", minWidth: 260, maxWidth: 580, display: "flex", justifyContent: "center", position: "relative", zIndex: 1 }}>
         <div style={{
           background: "white",
           borderRadius: 20,
@@ -294,23 +294,23 @@ function TemplateShowcase({ onStart }) {
 
   return (
     <section style={{
-      padding: "90px 80px",
+      padding: "clamp(48px, 6vw, 90px) clamp(16px, 5vw, 80px)",
       background: "linear-gradient(180deg, #f8fafc 0%, white 100%)",
       textAlign: "center",
     }}>
       <h2 style={{
-        fontSize: 44, fontWeight: 800, color: "#0f172a",
+        fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 800, color: "#0f172a",
         fontFamily: "'Outfit', sans-serif", marginBottom: 8, lineHeight: 1.2,
       }}>
         Generate Your Perfect
         <br /><span style={{ color: "#3b82f6" }}>AI Resume</span>
       </h2>
-      <p style={{ fontSize: 16, color: "#475569", marginBottom: 52, maxWidth: 540, margin: "16px auto 52px" }}>
+      <p style={{ fontSize: 16, color: "#475569", marginBottom: 44, maxWidth: 540, margin: "16px auto 44px" }}>
         AI-powered, ATS-optimized resumes trusted by thousands of professionals worldwide. Built in under 60 seconds.
       </p>
 
       {/* Filter pills */}
-      <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 52, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 44, flexWrap: "wrap" }}>
         {["✦ All Styles", "Professional", "Modern", "Classic", "ATS-Optimized"].map((tab, i) => (
           <div key={tab} style={{
             padding: "9px 22px", borderRadius: 50, fontSize: 14, fontWeight: 600,
@@ -327,7 +327,7 @@ function TemplateShowcase({ onStart }) {
       </div>
 
       {/* Cards row */}
-      <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", marginBottom: 52 }}>
+      <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", marginBottom: 44 }}>
         <ResumeCard name="Professional" colors={["#1e40af", "#bfdbfe"]} rating="4.5" />
         <ResumeCard name="ATS-Optimized" colors={["#7c3aed", "#ede9fe"]} rating="4.8" />
         <ResumeCard name="Modern Classic" colors={["#0f172a", "#cbd5e1"]} rating="4.7" />
@@ -356,7 +356,7 @@ function FinalCTA({ onStart }) {
   return (
     <section style={{
       background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
-      padding: "100px 80px",
+      padding: "clamp(56px, 8vw, 100px) clamp(16px, 5vw, 80px)",
       textAlign: "center",
     }}>
       <div style={{
@@ -368,12 +368,12 @@ function FinalCTA({ onStart }) {
         ⚡ 100% Free · No Credit Card · Instant PDF
       </div>
       <h2 style={{
-        fontSize: 48, fontWeight: 800, color: "white",
+        fontSize: "clamp(28px, 5vw, 48px)", fontWeight: 800, color: "white",
         fontFamily: "'Outfit', sans-serif", lineHeight: 1.15, marginBottom: 16,
       }}>
         Ready to Land More Interviews?
       </h2>
-      <p style={{ color: "#94a3b8", fontSize: 17, lineHeight: 1.7, marginBottom: 44, maxWidth: 520, margin: "0 auto 44px" }}>
+      <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.7, marginBottom: 36, maxWidth: 520, margin: "0 auto 36px" }}>
         Join thousands who have already built ATS-beating resumes with SmartCV AI. Takes less than 60 seconds.
       </p>
       <button
@@ -382,7 +382,7 @@ function FinalCTA({ onStart }) {
           display: "inline-flex", alignItems: "center", gap: 10,
           background: "linear-gradient(135deg, #f97316, #ef4444)",
           color: "white", border: "none", borderRadius: 50,
-          padding: "18px 52px", fontSize: 18, fontWeight: 700,
+          padding: "16px clamp(24px, 5vw, 52px)", fontSize: "clamp(15px, 2vw, 18px)", fontWeight: 700,
           cursor: "pointer", boxShadow: "0 12px 36px rgba(249,115,22,0.45)",
           transition: "all 0.25s ease",
         }}
@@ -397,7 +397,7 @@ function FinalCTA({ onStart }) {
 
 export default function LandingPage({ onStart }) {
   return (
-    <div style={{ background: "white", margin: "-32px -20px", overflow: "hidden" }}>
+    <div style={{ background: "white", margin: 0, overflow: "hidden" }}>
 
       {/* Section 1: Hero — AI Resume Builder */}
       <HeroSection onStart={onStart} mockupSrc={MOCKUP_IMG} />

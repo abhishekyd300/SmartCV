@@ -203,7 +203,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
               className="btn-3d-secondary"
               style={{ padding: "6px 14px", fontSize: 12, border: "none" }}
             >
-              🎨 Change Template
+              Change Template
             </button>
           )}
         </div>

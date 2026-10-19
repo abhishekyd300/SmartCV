@@ -115,8 +115,8 @@ function sanitizeAndEnforceIntegrity(result, resumeData, validProjects, validExp
         const items = Array.isArray(list)
           ? list
           : typeof list === "string"
-          ? list.split(/[,;]+/).map(s => s.trim()).filter(Boolean)
-          : [];
+            ? list.split(/[,;]+/).map(s => s.trim()).filter(Boolean)
+            : [];
 
         const filteredList = items.filter(skill => {
           if (!skill || typeof skill !== "string") return false;
@@ -312,14 +312,25 @@ Return ONLY raw JSON matching this structure:
 
   // Fallback to Groq if available
   if (!parsedResult && groq) {
-    const response = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
-      max_tokens: 2048,
-    });
-    const text = response.choices[0]?.message?.content || "";
-    parsedResult = parseJsonFromText(text);
+    const groqModels = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b"];
+    for (const modelName of groqModels) {
+      try {
+        const response = await groq.chat.completions.create({
+          model: modelName,
+          messages: [{ role: "user", content: prompt }],
+          response_format: { type: "json_object" },
+          temperature: 0.3,
+          max_tokens: 3072,
+        });
+        const text = response.choices[0]?.message?.content || "";
+        if (text) {
+          parsedResult = parseJsonFromText(text);
+          break;
+        }
+      } catch (err) {
+        console.warn(`Groq (${modelName}) failed:`, err.message);
+      }
+    }
   }
 
   if (!parsedResult) {
@@ -345,7 +356,7 @@ export async function improveSection(section, content, targetRole) {
   if (googleAi) {
     try {
       const response = await googleAi.models.generateContent({
-        model: "gemini-3.8-flash",
+        model: "gemini-3.5-flash",
         contents: prompt,
         config: {
           temperature: 0.5,
@@ -360,13 +371,21 @@ export async function improveSection(section, content, targetRole) {
   }
 
   if (groq) {
-    const response = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.5,
-      max_tokens: 500,
-    });
-    return response.choices[0]?.message?.content?.trim() || content;
+    const groqModels = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b"];
+    for (const modelName of groqModels) {
+      try {
+        const response = await groq.chat.completions.create({
+          model: modelName,
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.5,
+          max_tokens: 1000,
+        });
+        const improved = response.choices[0]?.message?.content?.trim();
+        if (improved) return improved;
+      } catch (err) {
+        console.warn(`Groq improveSection (${modelName}) failed:`, err.message);
+      }
+    }
   }
 
   return content;
