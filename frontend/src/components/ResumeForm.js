@@ -218,7 +218,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
             {error && <div className="error-msg">⚠️ {error}</div>}
             <div className="form-row">
               <div className="form-group">
-                <label>Target Role / Job Title (Headline under your name on resume) *</label>
+                <label>Target Role / Job Title (Headline under your name on resume)*</label>
                 <input
                   placeholder="e.g. Senior Project Manager / Web Designer / Full Stack Developer"
                   value={form.targetRole}
@@ -294,7 +294,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
           {/* Education */}
           <div className="glass-card-3d">
             <div className="form-section-title">
-              🎓 Education *
+              🎓 Education
               <span style={{ fontSize: 12, background: "rgba(168,85,247,0.2)", color: "#c084fc", padding: "2px 10px", borderRadius: 99 }}>{form.education.length}</span>
             </div>
             {form.education.map((edu, i) => (
@@ -340,27 +340,26 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
             </button>
           </div>
 
-          {/* Skills */}
+          {/* Skills (Optional) */}
           <div className="glass-card-3d">
-            <div className="form-section-title">🛠️ Technical Skills *</div>
+            <div className="form-section-title">🛠️ Technical Skills</div>
             <div className="form-group">
-              <label>List Your Skills *</label>
+              <label>List Your Skills</label>
               <textarea
-                placeholder=""
+                placeholder="e.g. JavaScript, React, Node.js, Python, SQL, Git..."
                 value={form.skills}
                 onChange={(e) => setForm((f) => ({ ...f, skills: e.target.value }))}
                 style={{ minHeight: 120 }}
-                required
               />
               <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 8 }}>
-                💡 You can group by category or separate with commas. AI will format into clean categories.
+                💡 Optional. You can group by category or separate with commas.
               </div>
             </div>
           </div>
 
           {/* Languages (Optional) */}
           <div className="glass-card-3d">
-            <div className="form-section-title">🌐 Languages (Optional)</div>
+            <div className="form-section-title">🌐 Languages</div>
             <div className="form-group">
               <label>Languages Known & Proficiency</label>
               <textarea
@@ -369,9 +368,6 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
                 onChange={(e) => setForm((f) => ({ ...f, languages: e.target.value }))}
                 style={{ minHeight: 70 }}
               />
-              <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 8 }}>
-                💡 Displayed on international & modern resume templates (e.g., Europass style).
-              </div>
             </div>
           </div>
 
@@ -438,7 +434,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
           {/* Work Experience (Optional) */}
           <div className="glass-card-3d">
             <div className="form-section-title">
-              💼 Work Experience (Optional)
+              💼 Work Experience
               <span style={{ fontSize: 12, background: "rgba(168,85,247,0.2)", color: "#c084fc", padding: "2px 10px", borderRadius: 99 }}>{form.experience.length}</span>
             </div>
             {form.experience.map((exp, i) => (
@@ -488,7 +484,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
 
           {/* Certifications (Optional) */}
           <div className="glass-card-3d">
-            <div className="form-section-title">📜 Certifications (Optional)</div>
+            <div className="form-section-title">📜 Certifications</div>
             <div className="form-group">
               <label>List Your Certifications</label>
               <textarea
@@ -502,7 +498,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
 
           {/* Achievements (Optional) */}
           <div className="glass-card-3d">
-            <div className="form-section-title">🏆 Achievements (Optional)</div>
+            <div className="form-section-title">🏆 Achievements</div>
             <div className="form-group">
               <label>List Your Achievements</label>
               <textarea
@@ -518,7 +514,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
           <div style={{ textAlign: "center", padding: "16px 0 40px" }}>
             <button type="submit" className="btn-3d-primary" disabled={loading}
               style={{ width: "100%", maxWidth: 420, padding: "16px 0", fontSize: 18 }}>
-              {loading ? "Generating Resume..." : "✨ Generate AI Resume"}
+              {loading ? "Generating Resume..." : "✨ Generate Resume"}
             </button>
           </div>
         </div>

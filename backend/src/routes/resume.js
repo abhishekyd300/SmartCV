@@ -9,14 +9,15 @@ const validateResume = [
   body("personalInfo.email").isEmail().withMessage("Valid email is required"),
   body("targetRole").notEmpty().withMessage("Target role is required"),
   body("education").isArray({ min: 1 }).withMessage("At least one education entry required"),
-  body("skills").notEmpty().withMessage("Skills are required"),
+  body("skills").optional(),
 ];
 
 // POST /api/resume/generate
 router.post("/generate", validateResume, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    const errorMsg = errors.array().map((e) => e.msg).join(", ");
+    return res.status(400).json({ error: errorMsg, errors: errors.array() });
   }
 
   try {

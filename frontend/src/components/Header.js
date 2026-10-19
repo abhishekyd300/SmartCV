@@ -5,35 +5,36 @@ export default function Header({ onNavigate, currentStep }) {
     <header className="app-header">
       <div className="logo-brand" onClick={() => onNavigate("landing")}>
         <div className="logo-icon">✨</div>
-        <span style={{ background: "linear-gradient(135deg, #fff 30%, #a855f7 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          SmartCV AI
+        <span className="logo-text">
+          <span className="logo-text-smartcv">SmartCV</span>{" "}
+          <span className="logo-text-ai">AI</span>
         </span>
       </div>
 
       <nav className="nav-links">
         <button
-          className={`btn-3d-secondary ${currentStep === "landing" ? "active" : ""}`}
+          type="button"
+          className={`nav-link-btn ${currentStep === "landing" ? "active" : ""}`}
           onClick={() => onNavigate("landing")}
-          style={{ border: "none" }}
         >
           Home
         </button>
         <button
-          className={`btn-3d-secondary ${currentStep === "templates" ? "active" : ""}`}
+          type="button"
+          className={`nav-link-btn ${currentStep === "templates" ? "active" : ""}`}
           onClick={() => onNavigate("templates")}
-          style={{ border: "none" }}
         >
           Templates
         </button>
         <button
+          type="button"
           className="nav-btn-glow"
           onClick={() => {
-            if (currentStep === "preview") onNavigate("form");
-            else if (currentStep === "landing") onNavigate("templates");
+            if (currentStep === "landing") onNavigate("templates");
             else onNavigate("form");
           }}
         >
-          {currentStep === "preview" ? "Edit Resume" : currentStep === "templates" ? "Continue →" : "Build Resume ✨"}
+          Build Resume ✨
         </button>
       </nav>
     </header>
