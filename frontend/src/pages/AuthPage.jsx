@@ -43,6 +43,7 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
       case "auth/email-already-in-use": return "An account with this email already exists.";
       case "auth/weak-password": return "Password must be at least 6 characters.";
       case "auth/invalid-email": return "Please enter a valid email address.";
+      //case "auth/operation-not-allowed": return "Email/Password sign-in is not enabled in your Firebase Console. Please enable it under Authentication > Sign-in method.";
       case "auth/too-many-requests": return "Too many attempts. Please try again later.";
       case "auth/popup-closed-by-user": return "Sign-in was cancelled.";
       default: return "Something went wrong. Please try again.";
@@ -68,6 +69,7 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
       // Auth success → redirect
       if (onAuthSuccess) onAuthSuccess();
     } catch (err) {
+      console.error("Auth error:", err);
       setError(getErrorMessage(err.code));
     }
     setLoading(false);
@@ -81,6 +83,7 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
       // Auth success → redirect
       if (onAuthSuccess) onAuthSuccess();
     } catch (err) {
+      console.error("Google auth error:", err);
       setError(getErrorMessage(err.code));
     }
     setLoading(false);
@@ -260,11 +263,7 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
               Sign in with Google
             </button>
 
-            {!isSignUp && (
-              <a href="#forgot" className="auth-forgot-link">
-                Forgot your password?
-              </a>
-            )}
+
 
             <p className="auth-switch">
               {isSignUp

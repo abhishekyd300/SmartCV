@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const defaultForm = {
-  personalInfo: { name: "", email: "", phone: "", location: "", linkedin: "", github: "", leetcode: "", portfolio: "" },
+  personalInfo: { name: "", email: "", phone: "", location: "", linkedin: "", github: "", leetcode: "", portfolio: "", photoUrl: "" },
   targetRole: "",
   jobDescription: "",
   projects: [{ title: "", subtitle: "", techStack: "", github: "", live: "", description: "" }],
@@ -76,6 +76,7 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
         github: initialData.personalInfo?.github || "",
         leetcode: initialData.personalInfo?.leetcode || "",
         portfolio: initialData.personalInfo?.portfolio || "",
+        photoUrl: initialData.personalInfo?.photoUrl || initialData.personalInfo?.photo || "",
       },
       targetRole: initialData.targetRole || initialData.personalInfo?.title || "",
       jobDescription: initialData.jobDescription || "",
@@ -90,9 +91,48 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
 
   const updatePersonal = (field, val) =>
     setForm((f) => ({ ...f, personalInfo: { ...f.personalInfo, [field]: val } }));
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setPhotoError("Please select a valid image file (PNG, JPG, WebP).");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError("Image size must be less than 5MB.");
+      return;
+    }
+
+    setPhotoError("");
+    setPhotoUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("photo", file);
+
+      const res = await axios.post("/api/resume/upload-photo", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.data?.url) {
+        updatePersonal("photoUrl", res.data.url);
+      }
+    } catch (err) {
+      console.error("Photo upload error:", err);
+      const msg = err.response?.data?.error || "Failed to upload photo to ImageKit.";
+      setPhotoError(msg);
+    } finally {
+      setPhotoUploading(false);
+    }
+  };
 
   // Projects handlers
   const updateProj = (i, field, val) =>
@@ -191,6 +231,8 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
                   modern_1: "Editorial Blush",
                   modern_2: "Steel Blue Executive",
                   modern_3: "Europass Indigo",
+                  withphoto_1: "Executive Gray (With Photo)",
+                  withphoto_2: "Warm Editorial Serif (With Photo)",
                 })[selectedTemplate] || "Classic Timeline"}
               </strong>
             </span>
@@ -241,6 +283,114 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
           {/* Personal Info */}
           <div className="glass-card-3d">
             <div className="form-section-title">👤 Personal Information</div>
+
+            {/* Profile Photo Upload via ImageKit.io */}
+            <div style={{
+              background: "rgba(255, 255, 255, 0.03)",
+              border: "1px dashed rgba(255, 255, 255, 0.15)",
+              borderRadius: 14,
+              padding: "18px 20px",
+              marginBottom: 20,
+              display: "flex",
+              alignItems: "center",
+              gap: 20,
+              flexWrap: "wrap",
+            }}>
+              <div style={{ position: "relative", width: 76, height: 76, flexShrink: 0 }}>
+                {form.personalInfo.photoUrl ? (
+                  <img
+                    src={form.personalInfo.photoUrl}
+                    alt="Profile Preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: selectedTemplate === "withphoto_1" ? "50%" : 8,
+                      objectFit: "cover",
+                      border: "2px solid #a855f7",
+                      boxShadow: "0 4px 12px rgba(168, 85, 247, 0.35)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: selectedTemplate === "withphoto_1" ? "50%" : 8,
+                      background: "rgba(168, 85, 247, 0.12)",
+                      border: "1px dashed #a855f7",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#c084fc",
+                      fontSize: 28,
+                    }}
+                  >
+                    📷
+                  </div>
+                )}
+              </div>
+
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <div style={{ fontWeight: 600, fontSize: 14, color: "#f8fafc", marginBottom: 3 }}>
+                  Profile Photo {selectedTemplate.startsWith("withphoto") && <span style={{ color: "#a855f7" }}>* (Recommended for this template)</span>}
+                </div>
+                <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 10 }}>
+                  Uploads to ImageKit.io in folder <code>/smartcv</code> (Max 5MB).
+                </div>
+
+                {photoError && (
+                  <div style={{ color: "#f87171", fontSize: 12, marginBottom: 8, background: "rgba(239, 68, 68, 0.1)", padding: "6px 10px", borderRadius: 6 }}>
+                    ⚠️ {photoError}
+                  </div>
+                )}
+
+                <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                  <label
+                    style={{
+                      background: photoUploading ? "rgba(255,255,255,0.1)" : "#a855f7",
+                      color: "#ffffff",
+                      borderRadius: 8,
+                      padding: "7px 16px",
+                      fontSize: 12.5,
+                      fontWeight: 600,
+                      cursor: photoUploading ? "not-allowed" : "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    {photoUploading ? "Uploading to ImageKit..." : form.personalInfo.photoUrl ? "Change Photo" : "Upload Photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      disabled={photoUploading}
+                      style={{ display: "none" }}
+                    />
+                  </label>
+
+                  {form.personalInfo.photoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => updatePersonal("photoUrl", "")}
+                      style={{
+                        background: "rgba(255,255,255,0.06)",
+                        color: "#ef4444",
+                        border: "1px solid rgba(239, 68, 68, 0.3)",
+                        borderRadius: 8,
+                        padding: "6px 14px",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
             <div className="form-row">
               <div className="form-group">
                 <label>Full Name *</label>

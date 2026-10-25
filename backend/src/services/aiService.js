@@ -17,6 +17,14 @@ function parseJsonFromText(text) {
   return JSON.parse(cleaned.substring(start, end + 1));
 }
 
+function withTimeout(promise, ms, errorMsg = "Operation timed out") {
+  let timer;
+  const timeoutPromise = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${errorMsg} (exceeded ${ms}ms)`)), ms);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
+}
+
 function sanitizeAndEnforceIntegrity(result, resumeData, validProjects, validExperience, validEducation, trimmedSkills, trimmedCerts, trimmedAch, trimmedLanguages) {
   const sanitized = { ...result };
 
@@ -33,6 +41,7 @@ function sanitizeAndEnforceIntegrity(result, resumeData, validProjects, validExp
     github: resumeData.personalInfo?.github || "",
     leetcode: resumeData.personalInfo?.leetcode || "",
     portfolio: resumeData.personalInfo?.portfolio || "",
+    photoUrl: resumeData.personalInfo?.photoUrl || sanitized.personalInfo?.photoUrl || "",
     title: resumeData.targetRole || sanitized.targetRole || "",
   };
 
@@ -291,10 +300,39 @@ Return ONLY raw JSON matching this structure:
 
   let parsedResult = null;
 
-  // Use Google Gemini if configured
-  if (googleAi) {
+  // 1. PRIMARY: Groq (Fast generation with 15s timeout)
+  if (groq) {
+    const groqModels = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b"];
+    for (const modelName of groqModels) {
+      try {
+        console.log(`[AI] Trying primary provider: Groq (${modelName})...`);
+        const fetchGroq = groq.chat.completions.create({
+          model: modelName,
+          messages: [{ role: "user", content: prompt }],
+          response_format: { type: "json_object" },
+          temperature: 0.3,
+          max_tokens: 3072,
+        });
+
+        // Timeout after 15 seconds if Groq takes too long
+        const response = await withTimeout(fetchGroq, 15000, `Groq (${modelName}) timed out`);
+        const text = response.choices[0]?.message?.content || "";
+        if (text) {
+          parsedResult = parseJsonFromText(text);
+          console.log(`[AI] Successfully generated resume with Groq (${modelName})`);
+          break;
+        }
+      } catch (err) {
+        console.warn(`[AI] Groq (${modelName}) failed or took too long: ${err.message}. Trying next or fallback...`);
+      }
+    }
+  }
+
+  // 2. FALLBACK: Google Gemini (if Groq is unavailable, fails, or takes too long)
+  if (!parsedResult && googleAi) {
     try {
-      const response = await googleAi.models.generateContent({
+      console.log("[AI] Switching to fallback provider: Google Gemini (gemini-3.8-flash)...");
+      const fetchGemini = googleAi.models.generateContent({
         model: "gemini-3.8-flash",
         contents: prompt,
         config: {
@@ -302,39 +340,18 @@ Return ONLY raw JSON matching this structure:
           temperature: 0.3,
         },
       });
+
+      const response = await withTimeout(fetchGemini, 20000, "Google Gemini timed out");
       const text = response.text || "";
       parsedResult = parseJsonFromText(text);
+      console.log("[AI] Successfully generated resume with fallback: Google Gemini");
     } catch (err) {
-      console.warn("Gemini generation failed, trying fallback:", err.message);
-      if (!groq) throw err;
-    }
-  }
-
-  // Fallback to Groq if available
-  if (!parsedResult && groq) {
-    const groqModels = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b"];
-    for (const modelName of groqModels) {
-      try {
-        const response = await groq.chat.completions.create({
-          model: modelName,
-          messages: [{ role: "user", content: prompt }],
-          response_format: { type: "json_object" },
-          temperature: 0.3,
-          max_tokens: 3072,
-        });
-        const text = response.choices[0]?.message?.content || "";
-        if (text) {
-          parsedResult = parseJsonFromText(text);
-          break;
-        }
-      } catch (err) {
-        console.warn(`Groq (${modelName}) failed:`, err.message);
-      }
+      console.error("[AI] Gemini fallback generation failed:", err.message);
     }
   }
 
   if (!parsedResult) {
-    throw new Error("No AI provider configured or both failed. Please check your API key.");
+    throw new Error("No AI provider configured or both Groq and Gemini failed. Please check your API keys.");
   }
 
   return sanitizeAndEnforceIntegrity(
@@ -353,38 +370,48 @@ Return ONLY raw JSON matching this structure:
 export async function improveSection(section, content, targetRole) {
   const prompt = `Improve this ${section} for a ${targetRole} role.\n\n${content}\n\nReturn only the improved text.`;
 
-  if (googleAi) {
-    try {
-      const response = await googleAi.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: prompt,
-        config: {
-          temperature: 0.5,
-        },
-      });
-      const improved = response.text?.trim();
-      if (improved) return improved;
-    } catch (err) {
-      console.warn("Gemini improveSection failed, trying fallback:", err.message);
-      if (!groq) throw err;
-    }
-  }
-
+  // 1. PRIMARY: Groq (with 8s timeout)
   if (groq) {
     const groqModels = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b"];
     for (const modelName of groqModels) {
       try {
-        const response = await groq.chat.completions.create({
+        const fetchGroq = groq.chat.completions.create({
           model: modelName,
           messages: [{ role: "user", content: prompt }],
           temperature: 0.5,
           max_tokens: 1000,
         });
+        const response = await withTimeout(fetchGroq, 8000, `Groq (${modelName}) timed out`);
         const improved = response.choices[0]?.message?.content?.trim();
-        if (improved) return improved;
+        if (improved) {
+          console.log(`[AI] Improved section with Groq (${modelName})`);
+          return improved;
+        }
       } catch (err) {
-        console.warn(`Groq improveSection (${modelName}) failed:`, err.message);
+        console.warn(`[AI] Groq improveSection (${modelName}) failed or timed out:`, err.message);
       }
+    }
+  }
+
+  // 2. FALLBACK: Google Gemini
+  if (googleAi) {
+    try {
+      console.log("[AI] Switching to fallback: Google Gemini for improveSection...");
+      const fetchGemini = googleAi.models.generateContent({
+        model: "gemini-3.8-flash",
+        contents: prompt,
+        config: {
+          temperature: 0.5,
+        },
+      });
+      const response = await withTimeout(fetchGemini, 12000, "Google Gemini timed out");
+      const improved = response.text?.trim();
+      if (improved) {
+        console.log("[AI] Improved section with fallback: Google Gemini");
+        return improved;
+      }
+    } catch (err) {
+      console.warn("[AI] Gemini improveSection failed:", err.message);
     }
   }
 

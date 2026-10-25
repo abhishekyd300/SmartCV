@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { SimpleTemplate1, SimpleTemplate2 } from "../components/templates/simple";
 import { ModernTemplate1, ModernTemplate2, ModernTemplate3 } from "../components/templates/modern";
+import { PhotoTemplate1, PhotoTemplate2 } from "../components/templates/withphoto";
 
 const TEMPLATE_NAMES = {
   simple_1: "Classic Timeline",
@@ -9,6 +10,8 @@ const TEMPLATE_NAMES = {
   modern_1: "Editorial Blush",
   modern_2: "Steel Blue Executive",
   modern_3: "Europass Indigo",
+  withphoto_1: "Executive Gray (With Photo)",
+  withphoto_2: "Warm Editorial Serif (With Photo)",
 };
 
 export default function ResumePreview({ resume, onBack, selectedTemplate = "simple_1", onChangeTemplate }) {
@@ -33,6 +36,10 @@ export default function ResumePreview({ resume, onBack, selectedTemplate = "simp
         return <ModernTemplate2 resume={resume} />;
       case "modern_3":
         return <ModernTemplate3 resume={resume} />;
+      case "withphoto_1":
+        return <PhotoTemplate1 resume={resume} />;
+      case "withphoto_2":
+        return <PhotoTemplate2 resume={resume} />;
       case "simple_1":
       default:
         return <SimpleTemplate1 resume={resume} />;

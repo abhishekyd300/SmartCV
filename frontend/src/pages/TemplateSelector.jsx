@@ -381,6 +381,122 @@ function Modern3Preview() {
   );
 }
 
+/* ─── Preview: James Miller (With Photo 1) ────────────────── */
+function WithPhoto1Preview() {
+  return (
+    <div style={{ display: "flex", height: "100%", background: "#ffffff", fontFamily: "sans-serif", boxSizing: "border-box" }}>
+      {/* Left Column (35%) */}
+      <div style={{ width: "35%", background: "#eceff2", padding: "12px 10px", boxSizing: "border-box", display: "flex", flexDirection: "column", borderRight: "1px solid #e2e8f0" }}>
+        {/* Circular Avatar */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+          <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #10b981, #059669)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 16, border: "2px solid #fff", boxShadow: "0 2px 6px rgba(0,0,0,0.15)" }}>
+            👤
+          </div>
+        </div>
+        <div style={{ height: 1, background: "#64748b", marginBottom: 8 }} />
+        <div style={{ fontSize: 6.5, fontWeight: 900, textTransform: "uppercase", color: "#0f172a", marginBottom: 4 }}>Skills</div>
+        <div style={{ fontSize: 5, color: "#334155", display: "grid", gap: 2 }}>
+          <div>• Financial Analysis</div>
+          <div>• Strategic Planning</div>
+          <div>• Trend Analysis</div>
+          <div>• Team Leadership</div>
+        </div>
+        <div style={{ height: 1, background: "#64748b", margin: "8px 0 6px" }} />
+        <div style={{ fontSize: 6.5, fontWeight: 900, textTransform: "uppercase", color: "#0f172a", marginBottom: 3 }}>Languages</div>
+        <div style={{ fontSize: 5, fontWeight: 700, color: "#1e293b", display: "grid", gap: 2 }}>
+          <div>ENGLISH</div>
+          <div>GERMAN</div>
+        </div>
+      </div>
+
+      {/* Right Column (65%) */}
+      <div style={{ width: "65%", padding: "12px 12px", boxSizing: "border-box" }}>
+        <div style={{ fontSize: 10, fontWeight: 900, textTransform: "uppercase", color: "#000", letterSpacing: 0.3 }}>JAMES MILLER</div>
+        <div style={{ fontSize: 6, fontWeight: 600, color: "#475569", marginBottom: 6 }}>Financial Analyst</div>
+        <div style={{ fontSize: 5, color: "#475569", display: "grid", gap: 1.5, marginBottom: 8 }}>
+          <div>✉ james.miller@email.com</div>
+          <div>📍 Oak Street 333, Boston</div>
+          <div>📞 +1 617 947 5112</div>
+        </div>
+        <div style={{ fontSize: 6.5, fontWeight: 900, textTransform: "uppercase", color: "#000", marginBottom: 2 }}>Summary</div>
+        <PLine w="100%" h={2.5} color="#94a3b8" mb={1} />
+        <PLine w="85%" h={2.5} color="#94a3b8" mb={6} />
+
+        <div style={{ fontSize: 6.5, fontWeight: 900, textTransform: "uppercase", color: "#000", marginBottom: 3 }}>Experience</div>
+        <div style={{ fontSize: 5.5, fontWeight: 800, color: "#000" }}>Financial Analyst, GEO Inc.</div>
+        <div style={{ fontSize: 4.8, color: "#64748b", marginBottom: 2 }}>Mar 2012 — Jul 2018</div>
+        <PLine w="95%" h={2} color="#cbd5e1" mb={1} />
+        <PLine w="80%" h={2} color="#cbd5e1" mb={4} />
+
+        <div style={{ fontSize: 6.5, fontWeight: 900, textTransform: "uppercase", color: "#000", marginBottom: 2 }}>Education</div>
+        <div style={{ fontSize: 5.5, fontWeight: 800, color: "#000" }}>B.S., Boston University</div>
+        <div style={{ fontSize: 4.8, color: "#64748b" }}>2000 — 2004</div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Preview: Samantha Williams (With Photo 2) ───────────── */
+function WithPhoto2Preview() {
+  return (
+    <div style={{ height: "100%", background: "#ffffff", fontFamily: "Georgia, serif", boxSizing: "border-box" }}>
+      {/* Top Banner (Warm Beige) */}
+      <div style={{ background: "#ece4dc", padding: "10px 12px", display: "flex", gap: 10, alignItems: "center" }}>
+        <div style={{ width: 38, height: 42, background: "#d6ccc2", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#574c43", flexShrink: 0 }}>
+          👩
+        </div>
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 400, color: "#111" }}>Samantha Williams</div>
+          <div style={{ fontSize: 6, fontWeight: 700, color: "#111", margin: "1px 0 2px" }}>Senior Analyst</div>
+          <div style={{ fontSize: 4.8, color: "#444", lineHeight: 1.3 }}>
+            <div>New York, NY · (555) 789-1234</div>
+            <div>samantha.williams@example.com</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Two Column Body */}
+      <div style={{ display: "flex", padding: "10px 12px", gap: 8 }}>
+        {/* Left Column (34%) */}
+        <div style={{ width: "34%" }}>
+          <div style={{ fontSize: 6, fontWeight: 800, textTransform: "uppercase", textDecoration: "underline", color: "#000", marginBottom: 3 }}>Summary</div>
+          <PLine w="100%" h={2.2} color="#94a3b8" mb={1} />
+          <PLine w="90%" h={2.2} color="#94a3b8" mb={5} />
+
+          <div style={{ fontSize: 6, fontWeight: 800, textTransform: "uppercase", textDecoration: "underline", color: "#000", marginBottom: 3 }}>Skills</div>
+          <div style={{ fontSize: 4.8, color: "#333", display: "grid", gap: 1.5 }}>
+            <div>• Project Management</div>
+            <div>• SQL & Excel</div>
+            <div>• Financial Analysis</div>
+            <div>• Statistical Modeling</div>
+          </div>
+        </div>
+
+        <div style={{ width: 1, background: "#e5e7eb" }} />
+
+        {/* Right Column (66%) */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 6, fontWeight: 800, textTransform: "uppercase", textDecoration: "underline", color: "#000", marginBottom: 4 }}>Experience</div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 5.5, fontStyle: "italic", fontWeight: 700 }}>
+            <span>Senior Analyst</span>
+            <span style={{ fontWeight: 400 }}>Jun 2021 — Current</span>
+          </div>
+          <div style={{ fontSize: 4.8, color: "#555", marginBottom: 2 }}>Loom & Lantern Co. - New York, NY</div>
+          <PLine w="95%" h={2} color="#cbd5e1" mb={1} />
+          <PLine w="85%" h={2} color="#cbd5e1" mb={4} />
+
+          <div style={{ fontSize: 6, fontWeight: 800, textTransform: "uppercase", textDecoration: "underline", color: "#000", marginBottom: 3 }}>Education</div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 5.5, fontStyle: "italic", fontWeight: 700 }}>
+            <span>New York University</span>
+            <span style={{ fontWeight: 400 }}>2013 — 2017</span>
+          </div>
+          <div style={{ fontSize: 4.8, color: "#555" }}>B.S., Economics</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Templates Catalog ──────────────────────────────────── */
 const CATEGORIES = [
   { id: "Simple", label: "Simple", icon: "☆" },
@@ -441,6 +557,28 @@ const TEMPLATES = [
     accent: "#505f9e",
     description: "Deep indigo banner with diamond section bullets and circular timeline indicators",
     PreviewComp: Modern3Preview,
+  },
+
+  // With Photo Templates (James Miller & Samantha Williams styles)
+  {
+    id: "withphoto_1",
+    name: "Executive Gray",
+    category: "With photo",
+    tag: "Popular",
+    tagColor: "#10b981",
+    accent: "#334155",
+    description: "Dual-tone layout with circular headshot sidebar, dark divider rules, and clean typography",
+    PreviewComp: WithPhoto1Preview,
+  },
+  {
+    id: "withphoto_2",
+    name: "Warm Editorial Serif",
+    category: "With photo",
+    tag: "Trending",
+    tagColor: "#d97706",
+    accent: "#78350f",
+    description: "Warm beige header with square portrait, elegant Georgia serif typography, and underlined headers",
+    PreviewComp: WithPhoto2Preview,
   },
 ];
 
