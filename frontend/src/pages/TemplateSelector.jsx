@@ -1,4 +1,74 @@
 import React, { useState } from "react";
+import { SimpleTemplate1, SimpleTemplate2 } from "../components/templates/simple";
+import { ModernTemplate1, ModernTemplate2, ModernTemplate3 } from "../components/templates/modern";
+import { PhotoTemplate1, PhotoTemplate2 } from "../components/templates/withphoto";
+
+const SAMPLE_RESUME = {
+  personalInfo: {
+    name: "James Miller",
+    email: "james.miller@email.com",
+    phone: "+1 617 947 5112",
+    location: "Oak Street 333, Boston, United States, 02101",
+    linkedin: "linkedin.com/in/jamesmiller",
+    title: "Financial Analyst",
+    photoUrl: "https://img.freepik.com/premium-photo/passport-photo-man-welldressed-caucasian-businessman-suit-tie-smiling-id-portrait_817921-61256.jpg?w=2000",
+  },
+  targetRole: "Financial Analyst",
+  summary: "Experienced Financial Analyst with strong background in managing multi-million budgets. Provides analysis and accounting support within product development. Works to reduce expenses and develop operating budgets.",
+  experience: [
+    {
+      title: "Financial Analyst",
+      company: "GEO Inc.",
+      location: "Boston",
+      duration: "Mar 2012 — Jul 2018",
+      bullets: [
+        "Created budgets and reduced labor and material costs by 15%.",
+        "Generated financial reports on completed projects with positive results.",
+        "Developed financial statements, cash flow charts and balance sheets.",
+      ],
+    },
+    {
+      title: "Financial Analyst",
+      company: "Sisco Enterprises Inc.",
+      location: "Boston",
+      duration: "Aug 2008 — Feb 2012",
+      bullets: [
+        "Reports, cash flow analysis, annual budgets, monthly forecasts and revenue projections.",
+        "Analyzed corporate accounts and advised in negotiations for budget savings.",
+        "Coordinated key finance reports and presented results to management.",
+      ],
+    },
+  ],
+  education: [
+    {
+      degree: "Bachelor of Science in Finance",
+      institution: "Boston University",
+      year: "Aug 2000 — Apr 2004",
+      details: "Graduated summa cum laude.",
+    },
+    {
+      degree: "High School Diploma",
+      institution: "Camden High School, Boston",
+      year: "Aug 1996 — Apr 2000",
+      details: "",
+    },
+  ],
+  skills: {
+    "Core Skills": [
+      "Financial Analysis",
+      "Strategic Planning",
+      "Trend Analysis",
+      "Market Assessment",
+      "Team Leadership",
+    ],
+  },
+  languages: ["English", "German"],
+  certifications: [
+    "Chartered Financial Analyst (CFA)",
+    "Financial Modeling & Valuation Analyst (FMVA)",
+  ],
+  projects: [],
+};
 
 /* ─── Mini Resume Preview Helper ──────────────────────────── */
 function PLine({ w = "100%", h = 5, color = "#e2e8f0", mb = 4, r = 2 }) {
@@ -499,66 +569,13 @@ function WithPhoto2Preview() {
 
 /* ─── Templates Catalog ──────────────────────────────────── */
 const CATEGORIES = [
+  { id: "All", label: "All Templates", icon: "📑" },
+  { id: "With photo", label: "With photo", icon: "🖼" },
   { id: "Simple", label: "Simple", icon: "☆" },
   { id: "Modern", label: "Modern", icon: "🎨" },
-  { id: "With photo", label: "With photo", icon: "🖼" },
 ];
 
 const TEMPLATES = [
-  // Simple Templates (from earlier reference images)
-  {
-    id: "simple_1",
-    name: "Classic Timeline",
-    category: "Simple",
-    tag: "Popular",
-    tagColor: "#16a34a",
-    accent: "#000000",
-    description: "Two-column layout with timeline connectors and black-bordered skill pills",
-    PreviewComp: Simple1Preview,
-  },
-  {
-    id: "simple_2",
-    name: "Clean Centered Serif",
-    category: "Simple",
-    tag: "ATS-Approved",
-    tagColor: "#2563eb",
-    accent: "#1e293b",
-    description: "Centered serif title, dashed divider, and clean 2-column skills list",
-    PreviewComp: Simple2Preview,
-  },
-
-  // Modern Templates (from new reference images)
-  {
-    id: "modern_1",
-    name: "Editorial Blush",
-    category: "Modern",
-    tag: "Trending",
-    tagColor: "#f43f5e",
-    accent: "#f43f5e",
-    description: "Chic blush aesthetic, boxed contact table, and rose star accents",
-    PreviewComp: Modern1Preview,
-  },
-  {
-    id: "modern_2",
-    name: "Steel Blue Executive",
-    category: "Modern",
-    tag: "Popular",
-    tagColor: "#3b82f6",
-    accent: "#64748b",
-    description: "Dual steel-blue header banner with integrated summary and 35/65 split body",
-    PreviewComp: Modern2Preview,
-  },
-  {
-    id: "modern_3",
-    name: "Europass Indigo",
-    category: "Modern",
-    tag: "New",
-    tagColor: "#4f46e5",
-    accent: "#505f9e",
-    description: "Deep indigo banner with diamond section bullets and circular timeline indicators",
-    PreviewComp: Modern3Preview,
-  },
-
   // With Photo Templates (James Miller & Samantha Williams styles)
   {
     id: "withphoto_1",
@@ -568,7 +585,7 @@ const TEMPLATES = [
     tagColor: "#10b981",
     accent: "#334155",
     description: "Dual-tone layout with circular headshot sidebar, dark divider rules, and clean typography",
-    PreviewComp: WithPhoto1Preview,
+    Component: PhotoTemplate1,
   },
   {
     id: "withphoto_2",
@@ -578,7 +595,61 @@ const TEMPLATES = [
     tagColor: "#d97706",
     accent: "#78350f",
     description: "Warm beige header with square portrait, elegant Georgia serif typography, and underlined headers",
-    PreviewComp: WithPhoto2Preview,
+    Component: PhotoTemplate2,
+  },
+
+  // Simple Templates
+  {
+    id: "simple_1",
+    name: "Classic Timeline",
+    category: "Simple",
+    tag: "Popular",
+    tagColor: "#16a34a",
+    accent: "#000000",
+    description: "Two-column layout with timeline connectors and black-bordered skill pills",
+    Component: SimpleTemplate1,
+  },
+  {
+    id: "simple_2",
+    name: "Clean Centered Serif",
+    category: "Simple",
+    tag: "ATS-Approved",
+    tagColor: "#2563eb",
+    accent: "#1e293b",
+    description: "Centered serif title, dashed divider, and clean 2-column skills list",
+    Component: SimpleTemplate2,
+  },
+
+  // Modern Templates
+  {
+    id: "modern_1",
+    name: "Editorial Blush",
+    category: "Modern",
+    tag: "Trending",
+    tagColor: "#f43f5e",
+    accent: "#f43f5e",
+    description: "Chic blush aesthetic, boxed contact table, and rose star accents",
+    Component: ModernTemplate1,
+  },
+  {
+    id: "modern_2",
+    name: "Steel Blue Executive",
+    category: "Modern",
+    tag: "Popular",
+    tagColor: "#3b82f6",
+    accent: "#64748b",
+    description: "Dual steel-blue header banner with integrated summary and 35/65 split body",
+    Component: ModernTemplate2,
+  },
+  {
+    id: "modern_3",
+    name: "Europass Indigo",
+    category: "Modern",
+    tag: "New",
+    tagColor: "#4f46e5",
+    accent: "#505f9e",
+    description: "Deep indigo banner with diamond section bullets and circular timeline indicators",
+    Component: ModernTemplate3,
   },
 ];
 
@@ -649,12 +720,11 @@ export function StepIndicator({ current = 1 }) {
 }
 
 /* ─── Main TemplateSelector Component ────────────────────── */
-export default function TemplateSelector({ onSelect, onSkip, initialSelected = "simple_1" }) {
-  const [activeCategory, setActiveCategory] = useState("Simple");
-  const [selectedId, setSelectedId] = useState(initialSelected || "simple_1");
-  const [hoveredId, setHoveredId] = useState(null);
+export default function TemplateSelector({ onSelect, onSkip, initialSelected = "withphoto_1" }) {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedId, setSelectedId] = useState(initialSelected || "withphoto_1");
 
-  const filtered = TEMPLATES.filter(t => t.category === activeCategory);
+  const filtered = activeCategory === "All" ? TEMPLATES : TEMPLATES.filter(t => t.category === activeCategory);
 
   const handleChoose = (id) => {
     setSelectedId(id);
@@ -752,7 +822,7 @@ export default function TemplateSelector({ onSelect, onSkip, initialSelected = "
         })}
       </div>
 
-      {/* 4. Template Cards Grid / Empty State */}
+      {/* 4. Large Templates Stack — Displayed One After Another */}
       {filtered.length === 0 ? (
         <div style={{
           textAlign: "center",
@@ -765,11 +835,8 @@ export default function TemplateSelector({ onSelect, onSkip, initialSelected = "
           <div style={{ fontSize: 18, fontWeight: 700, color: "#18181b", marginBottom: 6 }}>
             {activeCategory} Templates Coming Soon
           </div>
-          <p style={{ fontSize: 14, color: "#71717a", marginBottom: 18 }}>
-            Currently templates are exclusively available in the <strong>Simple</strong> category.
-          </p>
           <button
-            onClick={() => setActiveCategory("Simple")}
+            onClick={() => setActiveCategory("All")}
             style={{
               background: "#16a34a",
               color: "#ffffff",
@@ -781,196 +848,152 @@ export default function TemplateSelector({ onSelect, onSkip, initialSelected = "
               cursor: "pointer"
             }}
           >
-            Browse Simple Templates →
+            Browse All Templates →
           </button>
         </div>
       ) : (
-        <div className="template-grid" style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))",
-          gap: 28,
+        <div className="template-stack" style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 40,
+          maxWidth: 850,
+          margin: "0 auto",
           alignItems: "stretch"
         }}>
           {filtered.map(tpl => {
             const isSelected = selectedId === tpl.id;
-            const isHovered = hoveredId === tpl.id;
-            const Preview = tpl.PreviewComp;
+            const TemplateComponent = tpl.Component;
 
             return (
               <div
                 key={tpl.id}
-                onMouseEnter={() => setHoveredId(tpl.id)}
-                onMouseLeave={() => setHoveredId(null)}
+                id={`template-${tpl.id}`}
                 onClick={() => setSelectedId(tpl.id)}
                 style={{
                   background: "#ffffff",
-                  border: isSelected ? `2.5px solid ${tpl.accent}` : "1.5px solid #e4e4e7",
+                  border: isSelected ? `2.5px solid ${tpl.accent || "#16a34a"}` : "1.5px solid #e2e8f0",
                   borderRadius: 16,
                   overflow: "hidden",
                   cursor: "pointer",
-                  transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: isHovered || isSelected
-                    ? `0 14px 32px rgba(0, 0, 0, 0.1), 0 0 0 3px ${tpl.accent}20`
-                    : "0 2px 8px rgba(0, 0, 0, 0.04)",
-                  transform: isHovered ? "translateY(-4px)" : "none",
+                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                  boxShadow: isSelected
+                    ? `0 20px 44px rgba(0, 0, 0, 0.1), 0 0 0 3px ${tpl.accent || "#16a34a"}20`
+                    : "0 4px 20px rgba(0, 0, 0, 0.04)",
                   position: "relative",
-                  display: "flex",
-                  flexDirection: "column"
-                }}
-              >
-                {/* Badge Tag */}
-                {tpl.tag && (
-                  <div style={{
-                    position: "absolute",
-                    top: 12,
-                    right: 12,
-                    background: tpl.tagColor,
-                    color: "#ffffff",
-                    borderRadius: 20,
-                    padding: "3px 10px",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    zIndex: 3,
-                    boxShadow: `0 2px 8px ${tpl.tagColor}40`
-                  }}>
-                    {tpl.tag}
-                  </div>
-                )}
-
-                {/* Selection Indicator */}
-                {isSelected && (
-                  <div style={{
-                    position: "absolute",
-                    top: 12,
-                    left: 12,
-                    background: tpl.accent,
-                    color: "#ffffff",
-                    borderRadius: "50%",
-                    width: 24,
-                    height: 24,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    zIndex: 3,
-                    boxShadow: `0 2px 8px ${tpl.accent}50`
-                  }}>
-                    ✓
-                  </div>
-                )}
-
-                {/* Mini Preview Box */}
-                <div style={{
-                  height: 250,
-                  background: "#f8fafc",
-                  position: "relative",
-                  overflow: "hidden",
-                  borderBottom: "1px solid #f1f5f9"
-                }}>
-                  <div style={{
-                    transform: "scale(0.88)",
-                    transformOrigin: "top left",
-                    width: "113.6%",
-                    height: "113.6%"
-                  }}>
-                    <Preview />
-                  </div>
-
-                  {/* Hover overlay with button */}
-                  {isHovered && (
-                    <div style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: "rgba(15, 23, 42, 0.45)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backdropFilter: "blur(2px)",
-                      transition: "opacity 0.2s ease",
-                      zIndex: 2
-                    }}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleChoose(tpl.id);
-                        }}
-                        style={{
-                          background: tpl.accent === "#000000" ? "#16a34a" : tpl.accent,
-                          color: "#ffffff",
-                          border: "none",
-                          borderRadius: 50,
-                          padding: "11px 26px",
-                          fontSize: 14,
-                          fontWeight: 700,
-                          cursor: "pointer",
-                          boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-                          transform: "scale(1.02)",
-                          transition: "all 0.2s ease"
-                        }}
-                      >
-                        Use this template
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Template Card Info */}
-                <div style={{
-                  padding: "18px 20px",
-                  flex: 1,
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-between"
+                  scrollMarginTop: 90,
+                }}
+              >
+                {/* Header Bar for Template */}
+                <div style={{
+                  padding: "16px 22px",
+                  background: isSelected ? "rgba(22, 163, 74, 0.04)" : "#fafafa",
+                  borderBottom: "1px solid #e5e7eb",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 14
                 }}>
                   <div>
-                    <div style={{
-                      fontWeight: 700,
-                      fontSize: 17,
-                      color: "#18181b",
-                      marginBottom: 4
-                    }}>
-                      {tpl.name}
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 3 }}>
+                      <h3 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#0f172a" }}>
+                        {tpl.name}
+                      </h3>
+                      {tpl.tag && (
+                        <span style={{
+                          background: tpl.tagColor,
+                          color: "#ffffff",
+                          fontSize: 10.5,
+                          fontWeight: 700,
+                          padding: "2.5px 10px",
+                          borderRadius: 20,
+                          boxShadow: `0 2px 6px ${tpl.tagColor}35`
+                        }}>
+                          {tpl.tag}
+                        </span>
+                      )}
+                      <span style={{
+                        fontSize: 11.5,
+                        color: "#64748b",
+                        background: "#f1f5f9",
+                        padding: "2px 7px",
+                        borderRadius: 6
+                      }}>
+                        {tpl.category}
+                      </span>
                     </div>
-                    <div style={{
-                      fontSize: 13,
-                      color: "#71717a",
-                      lineHeight: 1.45
-                    }}>
+                    <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
                       {tpl.description}
-                    </div>
+                    </p>
                   </div>
 
-                  <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    {isSelected ? (
-                      <span style={{ color: tpl.accent, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {isSelected && (
+                      <span style={{
+                        color: "#16a34a",
+                        fontWeight: 700,
+                        fontSize: 13.5,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 5
+                      }}>
                         ✓ Selected
-                      </span>
-                    ) : (
-                      <span style={{ color: "#a1a1aa", fontSize: 13 }}>
-                        Click to select
                       </span>
                     )}
 
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleChoose(tpl.id);
                       }}
                       style={{
-                        background: isSelected ? tpl.accent : "#f4f4f5",
-                        color: isSelected ? "#ffffff" : "#18181b",
+                        background: isSelected
+                          ? "linear-gradient(135deg, #16a34a, #15803d)"
+                          : (tpl.accent === "#000000" ? "#1e293b" : tpl.accent),
+                        color: "#ffffff",
                         border: "none",
-                        borderRadius: 6,
-                        padding: "7px 16px",
-                        fontSize: 13,
-                        fontWeight: 600,
+                        borderRadius: 50,
+                        padding: "9px 24px",
+                        fontSize: 13.5,
+                        fontWeight: 700,
                         cursor: "pointer",
-                        transition: "all 0.2s"
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 7,
+                        transition: "all 0.2s ease"
                       }}
                     >
-                      Select
+                      {isSelected ? "Use this template →" : "Select this template"}
                     </button>
+                  </div>
+                </div>
+
+                {/* Large, High-Fidelity Resume Template Container */}
+                <div style={{
+                  background: "#f1f5f9",
+                  padding: "24px 16px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  maxHeight: 720,
+                  overflowY: "auto",
+                  borderBottom: "1px solid #f1f5f9"
+                }}>
+                  <div style={{
+                    width: "100%",
+                    maxWidth: 790,
+                    background: "#ffffff",
+                    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.07)",
+                    borderRadius: 4,
+                    overflow: "hidden"
+                  }}>
+                    {TemplateComponent ? (
+                      <TemplateComponent resume={SAMPLE_RESUME} />
+                    ) : null}
                   </div>
                 </div>
               </div>

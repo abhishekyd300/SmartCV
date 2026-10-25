@@ -1,6 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const CameraIcon = ({ size = 20, color = "currentColor", strokeWidth = 2 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ display: "inline-block", verticalAlign: "middle" }}
+  >
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+    <circle cx="12" cy="13" r="4" />
+  </svg>
+);
+
 const defaultForm = {
   personalInfo: { name: "", email: "", phone: "", location: "", linkedin: "", github: "", leetcode: "", portfolio: "", photoUrl: "" },
   targetRole: "",
@@ -317,26 +334,25 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
                       height: "100%",
                       borderRadius: selectedTemplate === "withphoto_1" ? "50%" : 8,
                       background: "rgba(168, 85, 247, 0.12)",
-                      border: "1px dashed #a855f7",
+                      border: "1.5px dashed #a855f7",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       color: "#c084fc",
-                      fontSize: 28,
                     }}
                   >
-                    📷
+                    <CameraIcon size={30} color="#c084fc" strokeWidth={1.8} />
                   </div>
                 )}
               </div>
 
               <div style={{ flex: 1, minWidth: 220 }}>
-                <div style={{ fontWeight: 600, fontSize: 14, color: "#f8fafc", marginBottom: 3 }}>
+                <div style={{ fontWeight: 600, fontSize: 14, color: "#111213ff", marginBottom: 3 }}>
                   Profile Photo {selectedTemplate.startsWith("withphoto") && <span style={{ color: "#a855f7" }}>* (Recommended for this template)</span>}
                 </div>
-                <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 10 }}>
+                {/* <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 10 }}>
                   Uploads to ImageKit.io in folder <code>/smartcv</code> (Max 5MB).
-                </div>
+                </div> */}
 
                 {photoError && (
                   <div style={{ color: "#f87171", fontSize: 12, marginBottom: 8, background: "rgba(239, 68, 68, 0.1)", padding: "6px 10px", borderRadius: 6 }}>
@@ -348,19 +364,21 @@ export default function ResumeForm({ onGenerated, initialData, selectedTemplate,
                   <label
                     style={{
                       background: photoUploading ? "rgba(255,255,255,0.1)" : "#a855f7",
-                      color: "#ffffff",
+                      color: "#131212ff",
                       borderRadius: 8,
-                      padding: "7px 16px",
-                      fontSize: 12.5,
+                      padding: "8px 16px",
+                      fontSize: 13,
                       fontWeight: 600,
                       cursor: photoUploading ? "not-allowed" : "pointer",
                       display: "inline-flex",
                       alignItems: "center",
-                      gap: 6,
+                      gap: 8,
                       transition: "all 0.2s",
+                      boxShadow: "0 2px 8px rgba(168, 85, 247, 0.3)"
                     }}
                   >
-                    {photoUploading ? "Uploading to ImageKit..." : form.personalInfo.photoUrl ? "Change Photo" : "Upload Photo"}
+                    <CameraIcon size={16} color="#ffffff" strokeWidth={2.2} />
+                    <span>{photoUploading ? "Uploading..." : form.personalInfo.photoUrl ? "Change Photo" : "Upload Photo"}</span>
                     <input
                       type="file"
                       accept="image/*"

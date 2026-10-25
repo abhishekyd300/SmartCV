@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 
@@ -43,6 +44,10 @@ export function AuthProvider({ children }) {
     return signInWithPopup(auth, googleProvider);
   };
 
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
+
   const logout = () => {
     return signOut(auth);
   };
@@ -53,6 +58,7 @@ export function AuthProvider({ children }) {
     login,
     signup,
     loginWithGoogle,
+    resetPassword,
     logout,
   };
 

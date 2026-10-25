@@ -25,8 +25,10 @@ const EyeOffIcon = () => (
 );
 
 export default function AuthPage({ onBack, onAuthSuccess }) {
-  const { login, signup, loginWithGoogle } = useAuth();
+  const { login, signup, loginWithGoogle, resetPassword } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -43,7 +45,6 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
       case "auth/email-already-in-use": return "An account with this email already exists.";
       case "auth/weak-password": return "Password must be at least 6 characters.";
       case "auth/invalid-email": return "Please enter a valid email address.";
-      //case "auth/operation-not-allowed": return "Email/Password sign-in is not enabled in your Firebase Console. Please enable it under Authentication > Sign-in method.";
       case "auth/too-many-requests": return "Too many attempts. Please try again later.";
       case "auth/popup-closed-by-user": return "Sign-in was cancelled.";
       default: return "Something went wrong. Please try again.";
@@ -71,6 +72,33 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
     } catch (err) {
       console.error("Auth error:", err);
       setError(getErrorMessage(err.code));
+    }
+    setLoading(false);
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setError("");
+    setResetSuccess("");
+
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await resetPassword(email.trim());
+      setResetSuccess(`Password reset email sent to ${email.trim()}! Please check your inbox (and spam folder) for the reset link.`);
+    } catch (err) {
+      console.error("Password reset error:", err);
+      if (err.code === "auth/user-not-found") {
+        setError("No account found with this email address.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Please enter a valid email address.");
+      } else {
+        setError(getErrorMessage(err.code));
+      }
     }
     setLoading(false);
   };
@@ -144,142 +172,239 @@ export default function AuthPage({ onBack, onAuthSuccess }) {
         {/* Right panel — form */}
         <div className="auth-form-panel">
           <div className="auth-form-wrapper">
-            <h2 className="auth-title">
-              {isSignUp ? "Create your account" : "Sign-in to your account"}
-            </h2>
+            {isForgotPassword ? (
+              /* Forgot Password Flow */
+              <>
+                <h2 className="auth-title">Reset your password</h2>
+                <p style={{ color: "#64748b", fontSize: "14px", marginTop: "-18px", marginBottom: "24px", lineHeight: 1.5 }}>
+                  Enter your registered email address and Firebase will send you a password reset link.
+                </p>
 
-            {error && (
-              <div className="auth-error">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="8" fill="#fee2e2" />
-                  <path d="M8 5v3m0 2h.01" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-                {error}
-              </div>
-            )}
+                {error && (
+                  <div className="auth-error">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="8" fill="#fee2e2" />
+                      <path d="M8 5v3m0 2h.01" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                    {error}
+                  </div>
+                )}
 
-            <form onSubmit={handleSubmit} className="auth-form">
-              {isSignUp && (
-                <div className="auth-field">
-                  <label htmlFor="auth-fullname">Full name</label>
-                  <input
-                    id="auth-fullname"
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="John Doe"
-                    autoComplete="name"
-                    required
-                  />
-                </div>
-              )}
+                {resetSuccess && (
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    background: "#ecfdf5",
+                    border: "1px solid #a7f3d0",
+                    color: "#065f46",
+                    padding: "12px 16px",
+                    borderRadius: "12px",
+                    fontSize: "13.5px",
+                    fontWeight: 500,
+                    marginBottom: "20px"
+                  }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span>{resetSuccess}</span>
+                  </div>
+                )}
 
-              <div className="auth-field">
-                <label htmlFor="auth-email">Email address</label>
-                <input
-                  id="auth-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  required
-                />
-              </div>
+                <form onSubmit={handleResetPassword} className="auth-form">
+                  <div className="auth-field">
+                    <label htmlFor="reset-email">Email address</label>
+                    <input
+                      id="reset-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
 
-              <div className="auth-field">
-                <label htmlFor="auth-password">Password</label>
-                <div className="auth-password-wrapper">
-                  <input
-                    id="auth-password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    autoComplete={isSignUp ? "new-password" : "current-password"}
-                    required
-                    minLength={6}
-                    maxLength={16}
-                  />
+                  <button
+                    type="submit"
+                    className="auth-submit-btn"
+                    disabled={loading}
+                  >
+                    {loading ? <span className="auth-spinner" /> : "Send Reset Link"}
+                  </button>
+                </form>
+
+                <div style={{ textAlign: "center", marginTop: "24px" }}>
                   <button
                     type="button"
-                    className="auth-eye-btn"
-                    onClick={() => setShowPassword(!showPassword)}
-                    tabIndex={-1}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="auth-forgot-link"
+                    style={{ background: "none", border: "none", cursor: "pointer", width: "100%" }}
+                    onClick={() => {
+                      setIsForgotPassword(false);
+                      setError("");
+                      setResetSuccess("");
+                    }}
                   >
-                    {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                    ← Back to Log in
                   </button>
                 </div>
-                <span className="auth-hint">
-                  * Your password must be between 6 and 16 characters long.
-                </span>
-              </div>
+              </>
+            ) : (
+              /* Standard Login / Signup Flow */
+              <>
+                <h2 className="auth-title">
+                  {isSignUp ? "Create your account" : "Sign-in to your account"}
+                </h2>
 
-              <label className="auth-checkbox-label" htmlFor="auth-stay">
-                <input
-                  id="auth-stay"
-                  type="checkbox"
-                  checked={staySignedIn}
-                  onChange={(e) => setStaySignedIn(e.target.checked)}
-                />
-                <span className="auth-checkmark" />
-                Stay signed in
-              </label>
-
-              <button
-                type="submit"
-                className="auth-submit-btn"
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="auth-spinner" />
-                ) : isSignUp ? (
-                  "Create Account"
-                ) : (
-                  "Log in"
+                {error && (
+                  <div className="auth-error">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="8" fill="#fee2e2" />
+                      <path d="M8 5v3m0 2h.01" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                    {error}
+                  </div>
                 )}
-              </button>
 
-              <p className="auth-terms">
-                By clicking '{isSignUp ? "Create Account" : "Log in"}' you also
-                agree to our{" "}
-                <a href="#terms">Terms of Use</a> and{" "}
-                <a href="#privacy">Privacy Policy</a>.
-              </p>
-            </form>
+                <form onSubmit={handleSubmit} className="auth-form">
+                  {isSignUp && (
+                    <div className="auth-field">
+                      <label htmlFor="auth-fullname">Full name</label>
+                      <input
+                        id="auth-fullname"
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="John Doe"
+                        autoComplete="name"
+                        required
+                      />
+                    </div>
+                  )}
 
-            <div className="auth-divider">
-              <span>or</span>
-            </div>
+                  <div className="auth-field">
+                    <label htmlFor="auth-email">Email address</label>
+                    <input
+                      id="auth-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
 
-            <button
-              type="button"
-              className="auth-social-btn"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              <GoogleIcon />
-              Sign in with Google
-            </button>
+                  <div className="auth-field">
+                    <label htmlFor="auth-password">Password</label>
+                    <div className="auth-password-wrapper">
+                      <input
+                        id="auth-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        autoComplete={isSignUp ? "new-password" : "current-password"}
+                        required
+                        minLength={6}
+                        maxLength={16}
+                      />
+                      <button
+                        type="button"
+                        className="auth-eye-btn"
+                        onClick={() => setShowPassword(!showPassword)}
+                        tabIndex={-1}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                      </button>
+                    </div>
+                    <span className="auth-hint">
+                      * Your password must be between 6 and 16 characters long.
+                    </span>
+                  </div>
 
+                  <label className="auth-checkbox-label" htmlFor="auth-stay">
+                    <input
+                      id="auth-stay"
+                      type="checkbox"
+                      checked={staySignedIn}
+                      onChange={(e) => setStaySignedIn(e.target.checked)}
+                    />
+                    <span className="auth-checkmark" />
+                    Stay signed in
+                  </label>
 
+                  <button
+                    type="submit"
+                    className="auth-submit-btn"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className="auth-spinner" />
+                    ) : isSignUp ? (
+                      "Create Account"
+                    ) : (
+                      "Log in"
+                    )}
+                  </button>
 
-            <p className="auth-switch">
-              {isSignUp
-                ? "Already have an account? "
-                : "Don't have an account? "}
-              <button
-                type="button"
-                className="auth-switch-btn"
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setError("");
-                }}
-              >
-                {isSignUp ? "Log in" : "Sign up"}
-              </button>
-            </p>
+                  <p className="auth-terms">
+                    By clicking '{isSignUp ? "Create Account" : "Log in"}' you also
+                    agree to our{" "}
+                    <a href="#terms">Terms of Use</a> and{" "}
+                    <a href="#privacy">Privacy Policy</a>.
+                  </p>
+                </form>
+
+                <div className="auth-divider">
+                  <span>or</span>
+                </div>
+
+                <button
+                  type="button"
+                  className="auth-social-btn"
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                >
+                  <GoogleIcon />
+                  Sign in with Google
+                </button>
+
+                {!isSignUp && (
+                  <button
+                    type="button"
+                    className="auth-forgot-link"
+                    style={{ background: "none", border: "none", cursor: "pointer", width: "100%" }}
+                    onClick={() => {
+                      setIsForgotPassword(true);
+                      setError("");
+                      setResetSuccess("");
+                    }}
+                  >
+                    Forgot your password?
+                  </button>
+                )}
+
+                <p className="auth-switch">
+                  {isSignUp
+                    ? "Already have an account? "
+                    : "Don't have an account? "}
+                  <button
+                    type="button"
+                    className="auth-switch-btn"
+                    onClick={() => {
+                      setIsSignUp(!isSignUp);
+                      setIsForgotPassword(false);
+                      setError("");
+                      setResetSuccess("");
+                    }}
+                  >
+                    {isSignUp ? "Log in" : "Sign up"}
+                  </button>
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
